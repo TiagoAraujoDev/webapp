@@ -1,28 +1,43 @@
+<mat-form-field class="input-container">
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="filterUsers($event)" placeholder="...by fullname, username or email" #input />
+</mat-form-field>
 <table mat-table [dataSource]="users" class="mat-elevation-z8">
-  <!-- Position Column -->
   <ng-container matColumnDef="user_id">
     <th mat-header-cell *matHeaderCellDef>ID</th>
     <td mat-cell *matCellDef="let user">{{ user.user_id }}</td>
   </ng-container>
 
-  <!-- Name Column -->
   <ng-container matColumnDef="fullname">
     <th mat-header-cell *matHeaderCellDef>Fullname</th>
     <td mat-cell *matCellDef="let user">{{ user.fullname }}</td>
   </ng-container>
 
-  <!-- Weight Column -->
   <ng-container matColumnDef="username">
     <th mat-header-cell *matHeaderCellDef>Username</th>
     <td mat-cell *matCellDef="let user">{{ user.username }}</td>
   </ng-container>
 
-  <!-- Symbol Column -->
   <ng-container matColumnDef="email">
     <th mat-header-cell *matHeaderCellDef>Email</th>
     <td mat-cell *matCellDef="let user">{{ user.email }}</td>
   </ng-container>
 
+  <ng-container matColumnDef="edit_button">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let user">
+      <a routerLink="/user/{{ user.user_id }}">
+        <mat-icon>edit</mat-icon>
+      </a>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      No user matching the filter "{{ input.value }}"
+    </td>
+  </tr>
 </table>

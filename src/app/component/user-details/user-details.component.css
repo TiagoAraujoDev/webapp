@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  width: 40%;
+  margin: 32px auto;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+}
+ /* TODO: Add some padding between header-card and the form  */
+.header-container {
+  margin-bottom: 14px;
+}
+
+.test {
+  width: 100%;
+}

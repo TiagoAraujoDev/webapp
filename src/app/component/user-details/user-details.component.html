@@ -1,0 +1,21 @@
+<mat-card appearance="outlined">
+  <mat-card-header class="header-container">
+    <mat-card-title>
+      {{ user.fullname }}
+    </mat-card-title>
+    <mat-card-subtitle>
+      {{ user.email }}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="card-content">
+    <form>
+      @for (input of inputs; track input.name) {
+        <mat-form-field class="test">
+        <mat-label>{{input.name}}</mat-label>
+          <input matInput [placeholder]="input.placeholder" />
+          <!-- <mat-error>invalid email</mat-error> -->
+        </mat-form-field>
+      }
+    </form>
+  </mat-card-content>
+</mat-card>

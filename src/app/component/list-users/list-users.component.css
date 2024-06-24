@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  width: 80%;
+  margin: 50px auto;
+}
+
+.input-container {
+  width: 100%;
+}
+
+.mat-column-user_id {
+  font-weight: bold;
+}
+
+td {
+  width: 25%;
+  padding: 16px 24px;
+}
+
+a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  color: black;
+}

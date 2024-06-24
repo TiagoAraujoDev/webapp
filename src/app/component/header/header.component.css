@@ -1,11 +1,11 @@
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 32px 48px;
 }
 
-header > img {
+header>img {
   width: 300px;
   cursor: pointer;
 }
