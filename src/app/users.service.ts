@@ -22,9 +22,9 @@ export class UsersService {
     );
   }
 
-  updateUser(userDTO: UserDTO): Observable<User> {
+  updateUser(userDTO: UserDTO, user_id: number): Observable<User> {
     return this.httpService.patch<User>(
-      `http://localhost:3000/api/models/users/${userDTO.user_id}`,
+      `http://localhost:3000/api/models/users/${user_id}`,
       userDTO,
     );
   }

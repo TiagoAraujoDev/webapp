@@ -8,8 +8,11 @@ type User = {
   username: string;
 };
 
-type UserDTO = Partial<
-  Pick<User, "user_id" | "fullname" | "email" | "phone" | "username">
->;
+interface UserDTO {
+  username?: string | null;
+  fullname?: string | null;
+  phone?: string | null;
+  email?: string | null;
+}
 
 export { User, UserDTO };

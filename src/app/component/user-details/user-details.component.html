@@ -8,14 +8,27 @@
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="card-content">
-    <form>
-      @for (input of inputs; track input.name) {
-        <mat-form-field class="test">
-        <mat-label>{{input.name}}</mat-label>
-          <input matInput [placeholder]="input.placeholder" />
-          <!-- <mat-error>invalid email</mat-error> -->
+    <form [formGroup]="userUpdateForm">
+        <mat-form-field class="input-container">
+        <mat-label>Fullname</mat-label>
+          <input formControlName="fullname" matInput />
         </mat-form-field>
-      }
+        <mat-form-field class="input-container">
+        <mat-label>Username</mat-label>
+          <input formControlName="username" matInput />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+        <mat-label>Phone</mat-label>
+          <input formControlName="phone" placeholder="(XX) XXXXX-XXXX" matInput />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+        <mat-label>Email</mat-label>
+          <input formControlName="email" placeholder="example@gmail.com" matInput />
+        </mat-form-field>
+      <div class="button-container">
+        <button (click)="updateUser($event)" mat-flat-button>Update</button>
+        <button mat-flat-button>Delete</button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>
