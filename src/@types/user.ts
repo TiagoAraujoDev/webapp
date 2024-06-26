@@ -1,14 +1,16 @@
 type User = {
-  created_at: string;
   email: string;
-  fullname: string;
-  password: string;
-  phone: string;
-  user_id: number;
   username: string;
+  verified: boolean;
+  uid: number;
+  name: string;
+  active: boolean;
+  picture: string;
+  created_at: string;
+  updated_at: string;
 };
 
-interface UserDTO {
+type UserDTO = {
   username?: string | null;
   fullname?: string | null;
   phone?: string | null;

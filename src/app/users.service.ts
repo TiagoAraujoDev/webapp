@@ -1,31 +1,37 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { User, UserDTO } from "../@types/user";
 import { Observable } from "rxjs";
+import _ from "lodash";
+
+import { User, UserDTO } from "../@types/user";
+import { Role } from "../@types/role";
 
 @Injectable({
   providedIn: "root",
 })
 export class UsersService {
+  private baseUrl = "https://api.nyxk.com.br";
   constructor(private httpService: HttpClient) {}
 
   // TODO: add query string to the request
   getUsers(_query?: string): Observable<User[]> {
-    return this.httpService.get<User[]>(
-      "http://localhost:3000/api/models/users",
-    );
+    return this.httpService.get<User[]>(`${this.baseUrl}/auth/users`);
   }
 
-  getUser(user_id: string): Observable<User> {
-    return this.httpService.get<User>(
-      `http://localhost:3000/api/models/users/${user_id}`,
-    );
+  getUser(uid: string): Observable<User> {
+    return this.httpService.get<User>(`${this.baseUrl}/auth/users/${uid}`);
   }
 
-  updateUser(userDTO: UserDTO, user_id: number): Observable<User> {
+  updateUser(userDTO: UserDTO, uid: number): Observable<User> {
+    const user = _.omitBy(userDTO, _.isEmpty());
     return this.httpService.patch<User>(
-      `http://localhost:3000/api/models/users/${user_id}`,
-      userDTO,
+      `${this.baseUrl}/auth/users/${uid}`,
+      user,
     );
+  }
+
+  // WARN: Move this method to role service
+  getRoles(): Observable<Role[]> {
+    return this.httpService.get<Role[]>(`${this.baseUrl}/auth/roles`);
   }
 }

@@ -1,7 +1,7 @@
 <mat-card appearance="outlined">
   <mat-card-header class="header-container">
     <mat-card-title>
-      {{ user.fullname }}
+      {{ user.name }}
     </mat-card-title>
     <mat-card-subtitle>
       {{ user.email }}
@@ -9,22 +9,30 @@
   </mat-card-header>
   <mat-card-content class="card-content">
     <form [formGroup]="userUpdateForm">
-        <mat-form-field class="input-container">
-        <mat-label>Fullname</mat-label>
-          <input formControlName="fullname" matInput />
-        </mat-form-field>
-        <mat-form-field class="input-container">
+      <mat-form-field class="input-container">
+        <mat-label>Name</mat-label>
+        <input formControlName="name" matInput />
+      </mat-form-field>
+      <mat-form-field class="input-container">
         <mat-label>Username</mat-label>
-          <input formControlName="username" matInput />
-        </mat-form-field>
-        <mat-form-field class="input-container">
+        <input formControlName="username" matInput />
+      </mat-form-field>
+      <mat-form-field class="input-container">
         <mat-label>Phone</mat-label>
-          <input formControlName="phone" placeholder="(XX) XXXXX-XXXX" matInput />
-        </mat-form-field>
-        <mat-form-field class="input-container">
+        <input formControlName="phone" placeholder="(XX) XXXXX-XXXX" matInput />
+      </mat-form-field>
+      <mat-form-field class="input-container">
         <mat-label>Email</mat-label>
-          <input formControlName="email" placeholder="example@gmail.com" matInput />
-        </mat-form-field>
+        <input formControlName="email" placeholder="example@gmail.com" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Roles</mat-label>
+        <mat-select>
+          @for (role of roles; track role) {
+          <mat-option>{{ role.role }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
       <div class="button-container">
         <button (click)="updateUser($event)" mat-flat-button>Update</button>
         <button mat-flat-button>Delete</button>

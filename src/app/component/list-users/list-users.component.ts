@@ -24,8 +24,8 @@ import { RouterLink } from "@angular/router";
 export class ListUsersComponent {
   users!: MatTableDataSource<User, MatPaginator>;
   displayedColumns: string[] = [
-    "user_id",
-    "fullname",
+    "uid",
+    "name",
     "username",
     "email",
     "edit_button",
