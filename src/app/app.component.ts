@@ -5,6 +5,7 @@ import { ListUsersComponent } from "./component/list-users/list-users.component"
 import { UsersService } from "./users.service";
 import { CommonModule } from "@angular/common";
 import { UserDetailsComponent } from "./component/user-details/user-details.component";
+import { OrgsService } from "./orgs.service";
 
 @Component({
   selector: "naval-root",
@@ -16,7 +17,7 @@ import { UserDetailsComponent } from "./component/user-details/user-details.comp
     ListUsersComponent,
     UserDetailsComponent,
   ],
-  providers: [UsersService],
+  providers: [UsersService, OrgsService],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
 })

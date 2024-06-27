@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { User } from "../../../@types/user";
 import { UsersService } from "../../users.service";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
-import { MatPaginator } from "@angular/material/paginator";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { RouterLink } from "@angular/router";
 
 @Component({
@@ -16,6 +16,7 @@ import { RouterLink } from "@angular/router";
     MatButtonModule,
     MatIconModule,
     MatInputModule,
+    MatPaginatorModule,
     RouterLink,
   ],
   templateUrl: "./list-users.component.html",
@@ -31,7 +32,13 @@ export class ListUsersComponent {
     "edit_button",
   ];
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(private usersService: UsersService) { }
+
+  ngAfterViewInit() {
+    this.users.paginator = this.paginator;
+  }
 
   ngOnInit() {
     this.usersService.getUsers().subscribe((users) => {

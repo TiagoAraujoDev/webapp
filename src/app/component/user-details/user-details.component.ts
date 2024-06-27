@@ -51,7 +51,6 @@ export class UserDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.usersService.getRoles().subscribe(roles => {
-      console.log("roles", roles)
       this.roles = roles;
     });
   }
