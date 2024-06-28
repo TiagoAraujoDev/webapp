@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
-import { OrgsService } from '../../orgs.service';
-import { Org } from '../../../@types/org';
+import { AuthService } from '../../auth.service';
+import { Org } from '../../../@types/auth';
 
 @Component({
   selector: 'naval-org-list',
@@ -23,7 +23,7 @@ import { Org } from '../../../@types/org';
   styleUrl: './org-list.component.css'
 })
 export class OrgListComponent implements AfterViewInit {
-  orgs!: MatTableDataSource<Org[], MatPaginator>;
+  orgs!: MatTableDataSource<Org, MatPaginator>;
   displayedColumns: string[] = [
     "oid",
     "name",
@@ -32,16 +32,16 @@ export class OrgListComponent implements AfterViewInit {
     "edit_button",
   ];
 
-  constructor(private orgsService: OrgsService) { }
+  constructor(private authService: AuthService) { }
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     this.orgs.paginator = this.paginator;
   }
 
   ngOnInit() {
-    this.orgsService.getOrgs().subscribe((orgs) => {
+    this.authService.getOrgs().subscribe((orgs) => {
       this.orgs = new MatTableDataSource(orgs);
     });
   }

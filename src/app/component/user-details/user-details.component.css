@@ -6,18 +6,28 @@
 
 form {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-direction: column;
-
 }
- /* TODO: Add some padding between header-card and the form  */
+
 .header-container {
   margin-bottom: 14px;
 }
 
 .input-container {
   width: 100%;
+}
+
+.role-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* BUG: Style not working */
+.role-input  role-mat-form-field {
+  flex-grow: 1;
 }
 
 .button-container {

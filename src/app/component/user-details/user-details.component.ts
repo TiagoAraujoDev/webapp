@@ -1,26 +1,28 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
-import { User } from "../../../@types/user";
-import { UsersService } from "../../users.service";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import _ from "lodash";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
-import { Role } from "../../../@types/role";
+import { MatRadioModule } from "@angular/material/radio";
+import { AuthService } from "../../auth.service";
+import { Role, User } from "../../../@types/auth";
 
 @Component({
   selector: "naval-user-details",
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    ReactiveFormsModule,
+    MatRadioModule,
   ],
   templateUrl: "./user-details.component.html",
   styleUrl: "./user-details.component.css",
@@ -30,37 +32,52 @@ export class UserDetailsComponent implements OnInit {
   protected id!: string;
   protected roles!: Role[];
 
-  // form
   protected roleInput = new FormControl("");
   protected userUpdateForm = new FormGroup({
+    name: new FormControl(""),
     username: new FormControl(""),
-    fullname: new FormControl(""),
-    phone: new FormControl(""),
     email: new FormControl(""),
+    active: new FormControl(),
+    verified: new FormControl(),
   });
 
-  constructor(private usersService: UsersService) { }
+  constructor(private authService: AuthService) { }
 
   @Input()
   set user_id(user_id: string) {
-    this.usersService.getUser(user_id).subscribe((user) => {
+    const u = { uid: _.parseInt(user_id) };
+    this.authService.getUser(u).subscribe((user) => {
       this.user = user;
       this.id = user_id;
     });
   }
 
   ngOnInit() {
-    this.usersService.getRoles().subscribe(roles => {
+    this.authService.getRoles().subscribe((roles) => {
       this.roles = roles;
     });
   }
 
-  updateUser(event: Event) {
-    event.preventDefault();
-    const formValue = this.userUpdateForm.value
+  handleAddRole(): void {
+    // TODO: Add call to POST /auth/roles
+    console.log(this.roleInput);
+  }
 
-    this.usersService.updateUser(formValue, parseInt(this.id)).subscribe(user => {
-      this.user = user;
-    });
+  handleDeleteUser(): void {
+    // TODO: Add call to DELETE /auth/users/:uid
+    console.log(this.id);
+  }
+
+  handleUpdateUser(event: Event): void {
+    event.preventDefault();
+    const formValue = this.userUpdateForm.value;
+    const u1 = _.omitBy(formValue, (v) => _.isNull(v));
+    const u2 = _.omitBy(u1, (v) => _.isEmpty(v));
+    const user = { ...u2, ...this.user };
+    this.authService
+      .updateUser(user)
+      .subscribe((user) => {
+        this.user = user;
+      });
   }
 }

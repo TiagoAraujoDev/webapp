@@ -1,12 +1,12 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { User } from "../../../@types/user";
-import { UsersService } from "../../users.service";
+import { User } from "../../../@types/auth";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { RouterLink } from "@angular/router";
+import { AuthService } from "../../auth.service";
 
 @Component({
   selector: "naval-list-users",
@@ -32,16 +32,16 @@ export class ListUsersComponent {
     "edit_button",
   ];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private usersService: UsersService) { }
+  constructor(private authService: AuthService) { }
 
   ngAfterViewInit() {
     this.users.paginator = this.paginator;
   }
 
   ngOnInit() {
-    this.usersService.getUsers().subscribe((users) => {
+    this.authService.getUsers().subscribe((users) => {
       this.users = new MatTableDataSource(users);
     });
   }
