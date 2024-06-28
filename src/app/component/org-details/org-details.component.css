@@ -1,0 +1,39 @@
+:host {
+    display: block;
+    width: 40%;
+    margin: 32px auto;
+  }
+  
+  form {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+  
+  .header-container {
+    margin-bottom: 14px;
+  }
+  
+  .input-container {
+    width: 100%;
+  }
+  
+  .role-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  /* BUG: Style not working */
+  .role-input  role-mat-form-field {
+    flex-grow: 1;
+  }
+  
+  .button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+  

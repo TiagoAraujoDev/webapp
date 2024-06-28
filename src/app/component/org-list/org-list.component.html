@@ -32,7 +32,7 @@
   <ng-container matColumnDef="edit_button">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let orgs">
-      <a routerLink="/orgs/{{ orgs.uid }}">
+      <a routerLink="/org/{{ orgs.oid }}">
         <mat-icon>edit</mat-icon>
       </a>
     </td>
