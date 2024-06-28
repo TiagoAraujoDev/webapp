@@ -36,13 +36,10 @@ export class ListUsersComponent {
 
   constructor(private authService: AuthService) { }
 
-  ngAfterViewInit() {
-    this.users.paginator = this.paginator;
-  }
-
   ngOnInit() {
     this.authService.getUsers().subscribe((users) => {
       this.users = new MatTableDataSource(users);
+      this.users.paginator = this.paginator;
     });
   }
 

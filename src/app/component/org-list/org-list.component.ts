@@ -22,7 +22,7 @@ import { Org } from '../../../@types/auth';
   templateUrl: './org-list.component.html',
   styleUrl: './org-list.component.css'
 })
-export class OrgListComponent implements AfterViewInit {
+export class OrgListComponent {
   orgs!: MatTableDataSource<Org, MatPaginator>;
   displayedColumns: string[] = [
     "oid",
@@ -36,13 +36,10 @@ export class OrgListComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  ngAfterViewInit() {
-    this.orgs.paginator = this.paginator;
-  }
-
   ngOnInit() {
     this.authService.getOrgs().subscribe((orgs) => {
       this.orgs = new MatTableDataSource(orgs);
+      this.orgs.paginator = this.paginator;
     });
   }
 
