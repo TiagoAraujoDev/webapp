@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import _ from "lodash";
 import { MatCardModule } from "@angular/material/card";
@@ -9,10 +9,11 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { AuthService } from "../../auth.service";
-import { Org } from "../../../@types/auth";
+import { Org, OrgId } from "../../../@types/auth";
+import { Router, RouterModule } from "@angular/router";
 
 @Component({
-  selector: 'naval-org-details',
+  selector: "naval-org-details",
   standalone: true,
   imports: [
     CommonModule,
@@ -23,15 +24,19 @@ import { Org } from "../../../@types/auth";
     MatButtonModule,
     MatSelectModule,
     MatRadioModule,
+    RouterModule,
   ],
-  templateUrl: './org-details.component.html',
-  styleUrl: './org-details.component.css'
+  templateUrl: "./org-details.component.html",
+  styleUrl: "./org-details.component.css",
 })
 export class OrgDetailsComponent {
   protected org!: Org;
   protected id!: string;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) { }
 
   @Input()
   set org_id(org_id: string) {
@@ -48,21 +53,25 @@ export class OrgDetailsComponent {
   });
 
   handleDeleteOrg(): void {
-    // TODO: Add call to DELETE /auth/orgs/:oid
-    console.log(this.id);
+    // TEST: After create org feat, test this feature
+    const oid: OrgId = {
+      oid: _.parseInt(this.id),
+    };
+    this.authService.deleteOrg(oid).subscribe();
+    this.router.navigate(["/orgs"]);
   }
 
   handleUpdateOrg(event: Event): void {
     event.preventDefault();
     const formValue = this.orgUpdateForm.value;
     const org = {
-      ..._.omitBy(_.omitBy(formValue, (v) => _.isNull(v)), (v) => _.isEmpty(v)),
-      ...this.org
+      ...this.org,
+      ..._.omitBy(formValue, (v) => _.isEmpty(v)),
     };
-    this.authService
-      .updateOrg(org)
-      .subscribe((org) => {
-        this.org = org;
-      });
+    this.authService.updateOrg(org).subscribe((org) => {
+      this.org = org;
+    });
+
+    this.orgUpdateForm.reset();
   }
 }

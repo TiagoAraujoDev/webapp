@@ -9,7 +9,9 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { AuthService } from "../../auth.service";
-import { Role, User } from "../../../@types/auth";
+import { Role, User, UserId } from "../../../@types/auth";
+import { Router } from "@angular/router";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
   selector: "naval-user-details",
@@ -23,6 +25,7 @@ import { Role, User } from "../../../@types/auth";
     MatButtonModule,
     MatSelectModule,
     MatRadioModule,
+    MatDividerModule,
   ],
   templateUrl: "./user-details.component.html",
   styleUrl: "./user-details.component.css",
@@ -41,7 +44,10 @@ export class UserDetailsComponent implements OnInit {
     verified: new FormControl(),
   });
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) { }
 
   @Input()
   set user_id(user_id: string) {
@@ -64,20 +70,27 @@ export class UserDetailsComponent implements OnInit {
   }
 
   handleDeleteUser(): void {
-    // TODO: Add call to DELETE /auth/users/:uid
-    console.log(this.id);
+    const uid: UserId = {
+      uid: _.parseInt(this.id),
+    };
+    this.authService.deleteUser(uid).subscribe();
+    this.router.navigate(["/users"]);
   }
 
   handleUpdateUser(event: Event): void {
     event.preventDefault();
     const formValue = this.userUpdateForm.value;
-    const u1 = _.omitBy(formValue, (v) => _.isNull(v));
-    const u2 = _.omitBy(u1, (v) => _.isEmpty(v));
-    const user = { ...u2, ...this.user };
-    this.authService
-      .updateUser(user)
-      .subscribe((user) => {
-        this.user = user;
-      });
+    const user = {
+      ...this.user,
+      ..._.omitBy(
+        _.omitBy(formValue, (v) => _.isNull(v)),
+        (v) => _.isEmpty(v),
+      ),
+    };
+    this.authService.updateUser(user).subscribe((user) => {
+      this.user = user;
+    });
+
+    this.userUpdateForm.reset();
   }
 }
