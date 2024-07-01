@@ -5,12 +5,16 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { AuthService } from "../../auth.service";
+import { User, UserData } from "../../../@types/auth";
+import { RouterModule } from "@angular/router";
 
 @Component({
   selector: "naval-user-add",
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
@@ -21,13 +25,24 @@ import { MatInputModule } from "@angular/material/input";
   styleUrl: "./user-add.component.css",
 })
 export class UserAddComponent {
-  title = "new user";
+  protected user: User | null = null;
+
+  constructor(private authService: AuthService) {}
+
   protected addUserForm = new FormGroup({
     username: new FormControl(""),
     email: new FormControl(""),
     name: new FormControl(""),
-    picture: new FormControl("token"),
+    picture: new FormControl(""),
     verified: new FormControl(true),
     active: new FormControl(true),
   });
+
+  handleAddUser(event: Event) {
+    event.preventDefault()
+    // console.log(this.addUserForm.value)
+    this.authService.createUser(this.addUserForm.value as UserData).subscribe(user => {
+      this.user = user;
+    });
+  }
 }

@@ -23,3 +23,11 @@ a {
   width: fit-content;
   color: black;
 }
+
+.link-container {
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+}

@@ -1,0 +1,24 @@
+:host {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.action-link-container {
+    display: flex;
+    justify-content: center;
+}
+
+.action-link {
+  text-decoration: underline;
+  cursor: pointer;
+  list-style-type: none;
+}
+.action-link:hover {
+    opacity: 0.8;
+}
