@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   createUser(user: UserData): Observable<User> {
-    return this.httpService.post<User>(`${this.baseUrl}/auth/users/`, user);
+    return this.httpService.post<User>(`${this.baseUrl}/auth/users`, user);
   }
 
   updateUser(user: User): Observable<User> {
@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   createOrg(org: OrgData): Observable<Org> {
-    return this.httpService.post<Org>(`${this.baseUrl}/auth/orgs/`, org);
+    return this.httpService.post<Org>(`${this.baseUrl}/auth/orgs`, org);
   }
 
   updateOrg(org: Org): Observable<Org> {
