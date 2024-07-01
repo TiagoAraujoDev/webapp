@@ -23,6 +23,11 @@ import { AuthService } from "../../auth.service";
   styleUrl: "./list-users.component.css",
 })
 export class ListUsersComponent {
+  title = "Tiago";
+  info = {
+    name: "tam",
+    email: "tma@gmail.com"
+  }
   users!: MatTableDataSource<User, MatPaginator>;
   displayedColumns: string[] = [
     "uid",
