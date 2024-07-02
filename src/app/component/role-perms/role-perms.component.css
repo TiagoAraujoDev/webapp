@@ -1,0 +1,33 @@
+:host {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+form {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.input-container {
+    width: 40%;
+}
+
+.links-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: gray;
+}
+
+a {
+    text-decoration: none;
+    color: gray;
+}

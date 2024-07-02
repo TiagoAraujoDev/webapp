@@ -82,7 +82,7 @@ export class AuthService {
     return this.httpService.get<Role[]>(`${this.baseUrl}/auth/roles`);
   }
 
-  createrole(role: Role): Observable<Role> {
+  createRole(role: Role): Observable<Role> {
     return this.httpService.post<Role>(`${this.baseUrl}/auth/roles`, role);
   }
 

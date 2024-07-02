@@ -52,9 +52,8 @@ export class OrgDetailsComponent {
     cnpj: new FormControl(""),
   });
 
-  handleDeleteOrg(event: Event): void {
-    event.preventDefault();
-    // TEST: After create org feat, test this feature
+  handleDeleteOrg(): void {
+    // BUG: Still not working - Error 500
     const oid: OrgId = {
       oid: _.parseInt(this.id),
     };
