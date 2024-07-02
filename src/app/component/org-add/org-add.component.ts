@@ -32,8 +32,7 @@ export class OrgAddComponent {
   protected addOrgForm = new FormGroup({
     name: new FormControl(""),
     cnpj: new FormControl(""),
-    picture: new FormControl(null),
-    id_type: new FormControl(""),
+    picture: new FormControl(""),
   });
 
   handleAddOrg(event: Event) {

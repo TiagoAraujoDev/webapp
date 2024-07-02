@@ -52,13 +52,15 @@ export class OrgDetailsComponent {
     cnpj: new FormControl(""),
   });
 
-  handleDeleteOrg(): void {
+  handleDeleteOrg(event: Event): void {
+    event.preventDefault();
     // TEST: After create org feat, test this feature
     const oid: OrgId = {
       oid: _.parseInt(this.id),
     };
-    this.authService.deleteOrg(oid).subscribe();
-    this.router.navigate(["/orgs"]);
+    this.authService.deleteOrg(oid).subscribe(() => {
+      this.router.navigate(["/orgs"]);
+    });
   }
 
   handleUpdateOrg(event: Event): void {

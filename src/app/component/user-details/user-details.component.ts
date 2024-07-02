@@ -73,8 +73,9 @@ export class UserDetailsComponent implements OnInit {
     const uid: UserId = {
       uid: _.parseInt(this.id),
     };
-    this.authService.deleteUser(uid).subscribe();
-    this.router.navigate(["/users"]);
+    this.authService.deleteUser(uid).subscribe(() => {
+      this.router.navigate(["/users"]);
+    });
   }
 
   handleUpdateUser(event: Event): void {
