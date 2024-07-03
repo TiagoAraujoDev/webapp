@@ -3,18 +3,18 @@
   <mat-card-header class="header-container">
     <mat-card-title>
       @if (user) {
-        <span>{{ user.name }}</span>
+      <span>{{ user.name }}</span>
       }
       @if (!user) {
-        <span>Loading...</span>
+      <span>Loading...</span>
       }
     </mat-card-title>
     <mat-card-subtitle>
       @if (user) {
-        <span>{{ user.email }}</span>
+      <span>{{ user.email }}</span>
       }
       @if (!user) {
-        <span>Loading...</span>
+      <span>Loading...</span>
       }
     </mat-card-subtitle>
   </mat-card-header>
@@ -30,30 +30,8 @@
       </mat-form-field>
       <mat-form-field class="input-container">
         <mat-label>Email</mat-label>
-        <input
-          formControlName="email"
-          placeholder="example@gmail.com"
-          matInput
-        />
+        <input formControlName="email" placeholder="example@gmail.com" matInput />
       </mat-form-field>
-      <!-- <mat-radio-group
-        class="radio-input"
-        formControlName="verified"
-        aria-label="Select a option"
-      >
-        <mat-label>User verified: </mat-label>
-        <mat-radio-button value="true">verified</mat-radio-button>
-        <mat-radio-button value="false">Not Verified</mat-radio-button>
-      </mat-radio-group>
-      <mat-radio-group
-        class="radio-input"
-        formControlName="active"
-        aria-label="Select a option"
-      >
-        <mat-label>User active: </mat-label>
-        <mat-radio-button value="true">Active</mat-radio-button>
-        <mat-radio-button value="false">Inactive</mat-radio-button>
-      </mat-radio-group> -->
       <div class="button-container">
         <button (click)="handleUpdateUser($event)" mat-flat-button>
           Update
@@ -63,17 +41,31 @@
         </button>
       </div>
     </form>
-    <mat-divider style="margin-bottom: 14px;"></mat-divider>
+    <mat-divider style="margin-bottom: 14px"></mat-divider>
     <div class="role-input">
-      <mat-form-field class="role-mat-form-field">
-        <mat-label>Roles</mat-label>
-        <mat-select [formControl]="roleInput">
-          @for (role of roles; track role) {
+      <form [formGroup]="enrollForm">
+        <mat-form-field class="role-mat-form-field">
+          <mat-label>Roles</mat-label>
+          <mat-select formControlName="role">
+            @for (role of roles; track role) {
             <mat-option [value]="role.role">{{ role.role }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <button (click)="handleAddRole()" mat-flat-button>Add role</button>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Organization</mat-label>
+          <input #orgInput type="text" placeholder="Select an organization..." aria-label="organization" matInput
+            (input)="filterOrgs()" (focus)="filterOrgs()" formControlName="oid" [matAutocomplete]="auto" />
+          <mat-autocomplete #auto="matAutocomplete">
+            @for (org of filteredOrgs; track org.oid) {
+            <mat-option [value]="org.oid">{{ org.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <button (click)="handleEnrollUser()" mat-flat-button>
+          Enroll user
+        </button>
+      </form>
     </div>
   </mat-card-content>
 </mat-card>

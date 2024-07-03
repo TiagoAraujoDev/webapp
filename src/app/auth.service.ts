@@ -19,7 +19,7 @@ import {
 })
 export class AuthService {
   private baseUrl = "https://api.nyxk.com.br";
-  constructor(private httpService: HttpClient) { }
+  constructor(private httpService: HttpClient) {}
 
   /////////////////////////////////////////////////////////////////////////////
   // USERS ////////////////////////////////////////////////////////////////////
@@ -46,6 +46,28 @@ export class AuthService {
   deleteUser(user: UserId): Observable<User> {
     return this.httpService.delete<User>(
       `${this.baseUrl}/auth/users/${user.uid}`,
+    );
+  }
+
+  enrollUser(uid: string, oid: string, role: Role): Observable<any> {
+    const _uid = _.parseInt(uid);
+    const body = {
+      oid: _.parseInt(oid),
+      role: role.role,
+    };
+    return this.httpService.put<any>(
+      `${this.baseUrl}/auth/users/${_uid}/enroll`,
+      {
+        body,
+      },
+    );
+  }
+
+  detachUser(uid: string, oid: string, role: Role): Observable<any> {
+    const _uid = _.parseInt(uid);
+    const _oid = _.parseInt(oid);
+    return this.httpService.delete<any>(
+      `${this.baseUrl}/auth/users/${_uid}/enroll/${_oid}/${role.role}`,
     );
   }
 
@@ -87,9 +109,9 @@ export class AuthService {
   }
 
   deleteRole(role: Role): Observable<Role> {
-    return this.httpService.delete<Role>(`${this.baseUrl}/auth/roles`, {
-      body: role,
-    });
+    return this.httpService.delete<Role>(
+      `${this.baseUrl}/auth/roles/${role.role}`,
+    );
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -104,8 +126,9 @@ export class AuthService {
   }
 
   deletePerm(perm: Perm): Observable<Perm> {
-    return this.httpService.delete<Perm>(`${this.baseUrl}/auth/perms`, {
-      body: perm,
-    });
+    console.log(perm.perm);
+    return this.httpService.delete<Perm>(
+      `${this.baseUrl}/auth/perms/${perm.perm}`,
+    );
   }
 }
