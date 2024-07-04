@@ -49,14 +49,13 @@ export class AuthService {
     );
   }
 
-  enrollUser(uid: string, oid: string, role: Role): Observable<any> {
-    const _uid = _.parseInt(uid);
+  enrollUser(uid: number, oid: number, role: Role): Observable<any> {
     const body = {
-      oid: _.parseInt(oid),
+      oid,
       role: role.role,
     };
     return this.httpService.put<any>(
-      `${this.baseUrl}/auth/users/${_uid}/enroll`,
+      `${this.baseUrl}/auth/users/${uid}/enroll`,
       {
         body,
       },

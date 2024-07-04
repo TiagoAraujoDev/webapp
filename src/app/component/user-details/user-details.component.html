@@ -1,24 +1,40 @@
-<h1>Update user</h1>
-<mat-card appearance="outlined">
-  <mat-card-header class="header-container">
-    <mat-card-title>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+  <mat-tab label="User details">
       @if (user) {
-      <span>{{ user.name }}</span>
+        <div class="tab-wrapper">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title style="display:flex; align-items: center;justify-content: space-between;">
+                <span>{{user.name}}</span>
+                @if (user.verified) {<mat-icon fontIcon="verified"/>}
+              </mat-card-title>
+              <mat-card-subtitle>
+                {{user.email}}
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores cum debitis vitae distinctio molestias sapiente natus soluta placeat quasi error repellat et cumque minus impedit, voluptates reiciendis iste laudantium. Illo!
+            </mat-card-content>
+            <mat-card-footer>
+              <mat-card-actions>
+                <a routerLink="/users"  class="actions-container">
+                  <mat-icon>arrow_back</mat-icon>
+                  <span>Go back</span>
+                </a>
+              </mat-card-actions>
+            </mat-card-footer>
+          </mat-card>
+        </div>
       }
       @if (!user) {
-      <span>Loading...</span>
+      <div class="tab-wrapper">
+        <mat-spinner></mat-spinner>
+      </div>
       }
-    </mat-card-title>
-    <mat-card-subtitle>
-      @if (user) {
-      <span>{{ user.email }}</span>
-      }
-      @if (!user) {
-      <span>Loading...</span>
-      }
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content class="card-content">
+  </mat-tab>
+  <mat-tab label="Update user">
+      <h2>Update user information</h2>
+      <p>Fill in the necessary information.</p>
     <form [formGroup]="userUpdateForm">
       <mat-form-field class="input-container">
         <mat-label>Name</mat-label>
@@ -33,7 +49,7 @@
         <input formControlName="email" placeholder="example@gmail.com" matInput />
       </mat-form-field>
       <div class="button-container">
-        <button (click)="handleUpdateUser($event)" mat-flat-button>
+        <button (click)="handleUpdateUser()" mat-flat-button>
           Update
         </button>
         <button (click)="handleDeleteUser()" mat-flat-button color="warn">
@@ -41,19 +57,25 @@
         </button>
       </div>
     </form>
-    <mat-divider style="margin-bottom: 14px"></mat-divider>
-    <div class="role-input">
+  </mat-tab>
+  <mat-tab label="Enroll user">
+      <h2>Enroll</h2>
+      <p>Enroll an user to an organization.</p>
       <form [formGroup]="enrollForm">
-        <mat-form-field class="role-mat-form-field">
+        <mat-form-field class="input-container">
+          <mat-label>User ID</mat-label>
+          <input matInput [value]="id" disabled />
+        </mat-form-field>
+        <mat-form-field class="input-container">
           <mat-label>Roles</mat-label>
           <mat-select formControlName="role">
-            @for (role of roles; track role) {
-            <mat-option [value]="role.role">{{ role.role }}</mat-option>
+            @for (role of roles; track role.role) {
+            <mat-option [value]="role">{{ role.role }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
-          <mat-label>Organization</mat-label>
+        <mat-form-field class="input-container">
+          <mat-label>Organization ID</mat-label>
           <input #orgInput type="text" placeholder="Select an organization..." aria-label="organization" matInput
             (input)="filterOrgs()" (focus)="filterOrgs()" formControlName="oid" [matAutocomplete]="auto" />
           <mat-autocomplete #auto="matAutocomplete">
@@ -66,6 +88,17 @@
           Enroll user
         </button>
       </form>
-    </div>
+  </mat-tab>
+</mat-tab-group>
+<!-- <h1>Update user</h1>
+<mat-card appearance="outlined">
+  <mat-card-header class="header-container">
+    <mat-card-title>
+    </mat-card-title>
+    <mat-card-subtitle>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="card-content">
+    <mat-divider style="margin-bottom: 14px"></mat-divider>
   </mat-card-content>
-</mat-card>
+</mat-card> -->

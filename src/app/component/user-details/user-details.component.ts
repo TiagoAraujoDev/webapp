@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   ViewChild,
-  input,
 } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import _ from "lodash";
@@ -17,9 +16,12 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { AuthService } from "../../auth.service";
 import { Org, Role, User, UserId } from "../../../@types/auth";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "naval-user-details",
@@ -27,6 +29,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -34,22 +37,27 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
     MatSelectModule,
     MatRadioModule,
     MatDividerModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
     MatAutocompleteModule,
   ],
   templateUrl: "./user-details.component.html",
   styleUrl: "./user-details.component.css",
 })
 export class UserDetailsComponent implements OnInit {
-  @ViewChild("#input") orgInput!: ElementRef<HTMLInputElement>;
   protected user!: User;
   protected id!: string;
   protected roles!: Role[];
   protected orgs!: Org[];
   protected filteredOrgs!: Org[];
 
+  @ViewChild("orgInput") orgInput!: ElementRef<HTMLInputElement>;
+
   protected enrollForm = new FormGroup({
     role: new FormControl(""),
     oid: new FormControl(""),
+    uid: new FormControl(0),
   });
 
   protected userUpdateForm = new FormGroup({
@@ -70,13 +78,13 @@ export class UserDetailsComponent implements OnInit {
   set user_id(user_id: string) {
     const u = { uid: _.parseInt(user_id) };
     this.authService.getUser(u).subscribe((user) => {
+      console.log(user);
       this.user = user;
       this.id = user_id;
     });
   }
 
   filterOrgs() {
-    console.log(this.orgInput.nativeElement.value)
     const filterValue = this.orgInput.nativeElement.value.toLowerCase();
     this.filteredOrgs = this.orgs.filter((org) =>
       org.name.toLowerCase().includes(filterValue),
@@ -101,8 +109,7 @@ export class UserDetailsComponent implements OnInit {
     });
   }
 
-  handleUpdateUser(event: Event): void {
-    event.preventDefault();
+  handleUpdateUser(): void {
     const formValue = this.userUpdateForm.value;
     const user = {
       ...this.user,
@@ -119,6 +126,7 @@ export class UserDetailsComponent implements OnInit {
   }
 
   handleEnrollUser() {
+    this.enrollForm.get("uid")?.setValue(_.parseInt(this.id));
     console.log(this.enrollForm.value);
   }
 }
