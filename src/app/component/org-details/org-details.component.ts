@@ -51,7 +51,7 @@ export class OrgDetailsComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.authService.getUsers().subscribe((users) => {

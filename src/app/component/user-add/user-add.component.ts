@@ -39,10 +39,12 @@ export class UserAddComponent {
   });
 
   handleAddUser(event: Event) {
-    event.preventDefault()
-    console.log(this.addUserForm.value)
-    this.authService.createUser(this.addUserForm.value as UserData).subscribe(user => {
-      this.user = user;
-    });
+    event.preventDefault();
+    console.log(this.addUserForm.value);
+    this.authService
+      .createUser(this.addUserForm.value as UserData)
+      .subscribe((user) => {
+        this.user = user;
+      });
   }
 }

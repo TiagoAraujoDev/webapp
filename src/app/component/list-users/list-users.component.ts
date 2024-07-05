@@ -25,8 +25,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   styleUrl: "./list-users.component.css",
 })
 export class ListUsersComponent {
-  users!: MatTableDataSource<User, MatPaginator>;
-  displayedColumns: string[] = [
+  protected users!: MatTableDataSource<User, MatPaginator>;
+  protected displayedColumns: string[] = [
     "uid",
     "name",
     "username",
@@ -35,11 +35,8 @@ export class ListUsersComponent {
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  // TODO: Use @ViewChild to filter
-  // @ViewChild("input") filterInput!: ElementRef<HTMLInputElement>;
-  // protected filteredUsers!: User[];
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.authService.getUsers().subscribe((users) => {
@@ -49,10 +46,6 @@ export class ListUsersComponent {
   }
 
   filterUsers({ target }: Event) {
-    /* const filterValue = this.filterInput.nativeElement.value.toLowerCase();
-    this.filteredUsers = this.users.filter((user) =>
-      user.name.toLowerCase().includes(filterValue),
-    ); */
     const inputElement = target as HTMLInputElement;
     const filterValue = inputElement.value;
     this.users.filter = filterValue.trim().toLowerCase();

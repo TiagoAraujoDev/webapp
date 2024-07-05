@@ -9,14 +9,9 @@ import { AuthService } from "./auth.service";
 @Component({
   selector: "naval-root",
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    RouterOutlet,
-    HeaderComponent,
-  ],
+  imports: [CommonModule, RouterModule, RouterOutlet, HeaderComponent],
   providers: [AuthService],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
 })
-export class AppComponent { }
+export class AppComponent {}

@@ -101,7 +101,8 @@ export class AuthService {
       uid: _.parseInt(uid),
       role: role.role,
     };
-    return this.httpService.put<Org>(`${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
+    return this.httpService.put<Org>(
+      `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
       body,
     );
   }
@@ -124,11 +125,12 @@ export class AuthService {
   }
 
   grantPermToRole(perm: string, role: string): Observable<any> {
-    return this.httpService.put<any>(`${this.baseUrl}/auth/roles/${role}/grant`,
+    return this.httpService.put<any>(
+      `${this.baseUrl}/auth/roles/${role}/grant`,
       {
         perm,
-      }
-    )
+      },
+    );
   }
 
   /////////////////////////////////////////////////////////////////////////////
