@@ -12,6 +12,12 @@
   margin: 32px auto;
 }
 
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .actions-container {
   display: flex;
   align-items: center;

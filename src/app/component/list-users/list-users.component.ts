@@ -7,6 +7,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "../../auth.service";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "naval-list-users",
@@ -18,6 +19,7 @@ import { AuthService } from "../../auth.service";
     MatInputModule,
     MatPaginatorModule,
     RouterLink,
+    MatProgressSpinnerModule,
   ],
   templateUrl: "./list-users.component.html",
   styleUrl: "./list-users.component.css",

@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { Org } from '../../../@types/auth';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'naval-org-list',
@@ -17,6 +18,7 @@ import { Org } from '../../../@types/auth';
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     RouterLink,
   ],
   templateUrl: './org-list.component.html',
