@@ -1,38 +1,43 @@
-@if(!user) {
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Create user</mat-card-title>
-    <mat-card-subtitle>Fill the form to create a user</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <form [formGroup]="addUserForm">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" type="text" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Username</mat-label>
-        <input matInput formControlName="username" type="text" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" placeholder="example@gmail.com" type="text" />
-      </mat-form-field>
-      <button mat-flat-button (click)="handleAddUser($event)">create</button>
-    </form>
-  </mat-card-content>
-  <mat-card-actions class="action-link-container">
-    <a class="action-link" routerLink="/users">Go back to users list</a>
-  </mat-card-actions>
-</mat-card>
-} @else if(user) {
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>User {{user.name}} created!</mat-card-title>
-    <mat-card-subtitle>{{user.email}}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-actions class="action-link-container">
-    <a class="action-link" routerLink="/users">Go back to users list</a>
-  </mat-card-actions>
-</mat-card>
+@if (!user) {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Create user</mat-card-title>
+      <mat-card-subtitle>Fill the form to create a user</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="addUserForm">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" type="text" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" type="text" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            placeholder="example@gmail.com"
+            type="text"
+          />
+        </mat-form-field>
+        <button mat-flat-button (click)="handleAddUser($event)">create</button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="action-link-container">
+      <a class="action-link" routerLink="/users">Go back to users list</a>
+    </mat-card-actions>
+  </mat-card>
+} @else if (user) {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>User {{ user.name }} created!</mat-card-title>
+      <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions class="action-link-container">
+      <a class="action-link" routerLink="/users">Go back to users list</a>
+    </mat-card-actions>
+  </mat-card>
 }

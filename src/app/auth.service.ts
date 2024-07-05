@@ -1,6 +1,6 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {Injectable} from "@angular/core";
+import {Observable} from "rxjs";
 import _ from "lodash";
 
 import {
@@ -11,11 +11,11 @@ import {
   UserId,
   OrgData,
   UserData,
-  Role,
+  Role
 } from "../@types/auth";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class AuthService {
   private baseUrl = "https://api.nyxk.com.br";
@@ -39,23 +39,23 @@ export class AuthService {
   updateUser(user: User): Observable<User> {
     return this.httpService.patch<User>(
       `${this.baseUrl}/auth/users/${user.uid}`,
-      user,
+      user
     );
   }
 
   deleteUser(user: UserId): Observable<User> {
     return this.httpService.delete<User>(
-      `${this.baseUrl}/auth/users/${user.uid}`,
+      `${this.baseUrl}/auth/users/${user.uid}`
     );
   }
 
   groupUser(uid: string, gid: string): Observable<any> {
     const body = {
-      gid: _.parseInt(gid),
+      gid: _.parseInt(gid)
     };
     return this.httpService.put<any>(
       `${this.baseUrl}/auth/users/${_.parseInt(uid)}/group`,
-      body,
+      body
     );
   }
 
@@ -65,8 +65,8 @@ export class AuthService {
     return this.httpService.patch<any>(
       `${this.baseUrl}/auth/users/${_uid}/group`,
       {
-        body: { gid: _gid },
-      },
+        body: {gid: _gid}
+      }
     );
   }
 
@@ -88,7 +88,7 @@ export class AuthService {
   updateOrg(org: Org): Observable<Org> {
     return this.httpService.patch<Org>(
       `${this.baseUrl}/auth/orgs/${org.oid}`,
-      org,
+      org
     );
   }
 
@@ -99,11 +99,11 @@ export class AuthService {
   enrollUser(oid: string, uid: string, role: Role): Observable<any> {
     const body = {
       uid: _.parseInt(uid),
-      role: role.role,
+      role: role.role
     };
     return this.httpService.put<Org>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
-      body,
+      body
     );
   }
 
@@ -120,7 +120,7 @@ export class AuthService {
 
   deleteRole(role: Role): Observable<Role> {
     return this.httpService.delete<Role>(
-      `${this.baseUrl}/auth/roles/${role.role}`,
+      `${this.baseUrl}/auth/roles/${role.role}`
     );
   }
 
@@ -128,8 +128,8 @@ export class AuthService {
     return this.httpService.put<any>(
       `${this.baseUrl}/auth/roles/${role}/grant`,
       {
-        perm,
-      },
+        perm
+      }
     );
   }
 
@@ -147,7 +147,7 @@ export class AuthService {
   deletePerm(perm: Perm): Observable<Perm> {
     console.log(perm.perm);
     return this.httpService.delete<Perm>(
-      `${this.baseUrl}/auth/perms/${perm.perm}`,
+      `${this.baseUrl}/auth/perms/${perm.perm}`
     );
   }
 }
