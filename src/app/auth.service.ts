@@ -49,24 +49,24 @@ export class AuthService {
     );
   }
 
-  enrollUser(uid: number, oid: number, role: Role): Observable<any> {
+  groupUser(uid: string, gid: string): Observable<any> {
     const body = {
-      oid,
-      role: role.role,
+      gid: _.parseInt(gid),
     };
     return this.httpService.put<any>(
-      `${this.baseUrl}/auth/users/${uid}/enroll`,
-      {
-        body,
-      },
+      `${this.baseUrl}/auth/users/${_.parseInt(uid)}/group`,
+      body,
     );
   }
 
-  detachUser(uid: string, oid: string, role: Role): Observable<any> {
+  ungroupUser(uid: string, gid: string): Observable<any> {
     const _uid = _.parseInt(uid);
-    const _oid = _.parseInt(oid);
-    return this.httpService.delete<any>(
-      `${this.baseUrl}/auth/users/${_uid}/enroll/${_oid}/${role.role}`,
+    const _gid = _.parseInt(gid);
+    return this.httpService.patch<any>(
+      `${this.baseUrl}/auth/users/${_uid}/group`,
+      {
+        body: { gid: _gid },
+      },
     );
   }
 
@@ -94,6 +94,16 @@ export class AuthService {
 
   deleteOrg(org: OrgId): Observable<Org> {
     return this.httpService.delete<Org>(`${this.baseUrl}/auth/orgs/${org.oid}`);
+  }
+
+  enrollUser(oid: string, uid: string, role: Role): Observable<any> {
+    const body = {
+      uid: _.parseInt(uid),
+      role: role.role,
+    };
+    return this.httpService.put<Org>(`${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
+      body,
+    );
   }
 
   /////////////////////////////////////////////////////////////////////////////

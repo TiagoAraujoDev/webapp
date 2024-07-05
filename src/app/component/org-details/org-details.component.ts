@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import _ from "lodash";
 import { MatCardModule } from "@angular/material/card";
@@ -9,8 +9,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { AuthService } from "../../auth.service";
-import { Org, OrgId } from "../../../@types/auth";
+import { Org, OrgId, Role, User } from "../../../@types/auth";
 import { Router, RouterModule } from "@angular/router";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatIconModule } from "@angular/material/icon";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @Component({
   selector: "naval-org-details",
@@ -18,13 +23,18 @@ import { Router, RouterModule } from "@angular/router";
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
     MatRadioModule,
-    RouterModule,
+    MatDividerModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatAutocompleteModule,
   ],
   templateUrl: "./org-details.component.html",
   styleUrl: "./org-details.component.css",
@@ -32,11 +42,25 @@ import { Router, RouterModule } from "@angular/router";
 export class OrgDetailsComponent {
   protected org!: Org;
   protected id!: string;
+  protected roles!: Role[];
+  protected users!: User[];
+  protected filteredUsers!: User[];
+
+  @ViewChild("userInput") userInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private authService: AuthService,
     private router: Router,
   ) { }
+
+  ngOnInit() {
+    this.authService.getUsers().subscribe((users) => {
+      this.users = users;
+    });
+    this.authService.getRoles().subscribe((roles) => {
+      this.roles = roles;
+    });
+  }
 
   @Input()
   set org_id(org_id: string) {
@@ -47,10 +71,23 @@ export class OrgDetailsComponent {
     });
   }
 
+  protected enrollForm = new FormGroup({
+    uid: new FormControl(""),
+    oid: new FormControl(""),
+    role: new FormControl<Role>({ role: "" }),
+  });
+
   protected orgUpdateForm = new FormGroup({
     name: new FormControl(""),
     cnpj: new FormControl(""),
   });
+
+  filterUsers() {
+    const filterValue = this.userInput.nativeElement.value.toLowerCase();
+    this.filteredUsers = this.users.filter((user) =>
+      user.name.toLowerCase().includes(filterValue),
+    );
+  }
 
   handleDeleteOrg(): void {
     // BUG: Still not working - Error 500
@@ -62,8 +99,7 @@ export class OrgDetailsComponent {
     });
   }
 
-  handleUpdateOrg(event: Event): void {
-    event.preventDefault();
+  handleUpdateOrg(): void {
     const formValue = this.orgUpdateForm.value;
     const org = {
       ...this.org,
@@ -74,5 +110,15 @@ export class OrgDetailsComponent {
     });
 
     this.orgUpdateForm.reset();
+  }
+
+  handleEnrollUser() {
+    this.enrollForm.get("oid")?.setValue(this.id);
+    const { oid, uid, role } = this.enrollForm.value;
+    if (uid && role?.role && oid) {
+      this.authService.enrollUser(oid, uid, role).subscribe((res) => {
+        console.log(res);
+      });
+    }
   }
 }

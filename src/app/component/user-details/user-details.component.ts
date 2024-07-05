@@ -1,11 +1,4 @@
-import { CommonModule } from "@angular/common";
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
+import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import _ from "lodash";
 import { MatCardModule } from "@angular/material/card";
@@ -16,7 +9,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { AuthService } from "../../auth.service";
 import { Org, Role, User, UserId } from "../../../@types/auth";
-import { Router, RouterModule } from "@angular/router";
+import { Router } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -27,9 +20,7 @@ import { MatIconModule } from "@angular/material/icon";
   selector: "naval-user-details",
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
-    RouterModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -48,16 +39,14 @@ import { MatIconModule } from "@angular/material/icon";
 export class UserDetailsComponent implements OnInit {
   protected user!: User;
   protected id!: string;
-  protected roles!: Role[];
-  protected orgs!: Org[];
-  protected filteredOrgs!: Org[];
+  protected users!: User[];
+  protected filteredUsers!: User[];
 
-  @ViewChild("orgInput") orgInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("userInput") userInput!: ElementRef<HTMLInputElement>;
 
   protected enrollForm = new FormGroup({
-    role: new FormControl(""),
-    oid: new FormControl(""),
-    uid: new FormControl(0),
+    gid: new FormControl(""),
+    uid: new FormControl(""),
   });
 
   protected userUpdateForm = new FormGroup({
@@ -68,35 +57,30 @@ export class UserDetailsComponent implements OnInit {
     verified: new FormControl(),
   });
 
-
   constructor(
     private authService: AuthService,
     private router: Router,
-  ) { }
+  ) {}
 
   @Input()
   set user_id(user_id: string) {
     const u = { uid: _.parseInt(user_id) };
     this.authService.getUser(u).subscribe((user) => {
-      console.log(user);
       this.user = user;
       this.id = user_id;
     });
   }
 
-  filterOrgs() {
-    const filterValue = this.orgInput.nativeElement.value.toLowerCase();
-    this.filteredOrgs = this.orgs.filter((org) =>
-      org.name.toLowerCase().includes(filterValue),
+  filterUsers() {
+    const filterValue = this.userInput.nativeElement.value.toLowerCase();
+    this.filteredUsers = this.users.filter((user) =>
+      user.name.toLowerCase().includes(filterValue),
     );
   }
 
   ngOnInit() {
-    this.authService.getRoles().subscribe((roles) => {
-      this.roles = roles;
-    });
-    this.authService.getOrgs().subscribe((orgs) => {
-      this.orgs = orgs;
+    this.authService.getUsers().subscribe((users) => {
+      this.users = users;
     });
   }
 
@@ -126,7 +110,12 @@ export class UserDetailsComponent implements OnInit {
   }
 
   handleEnrollUser() {
-    this.enrollForm.get("uid")?.setValue(_.parseInt(this.id));
-    console.log(this.enrollForm.value);
+    this.enrollForm.get("uid")?.setValue(this.id);
+    const { uid, gid } = this.enrollForm.value;
+    if (uid && gid) {
+      this.authService.groupUser(uid, gid).subscribe((res) => {
+        console.log(res);
+      });
+    }
   }
 }
