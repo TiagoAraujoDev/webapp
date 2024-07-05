@@ -48,6 +48,11 @@ export class RolePermsComponent {
     perm: new FormControl(""),
   });
 
+  protected rolesPermsForm = new FormGroup({
+    role: new FormControl(""),
+    perm: new FormControl(""),
+  })
+
   ngOnInit() {
     this.authService.getRoles().subscribe(roles => {
       this.roles = roles;
@@ -57,31 +62,36 @@ export class RolePermsComponent {
     });
   }
 
-  handleAddRole(event: Event) {
-    event.preventDefault();
+  handleAddRole() {
     this.authService.createRole(this.rolesAddForm.value as Role).subscribe((role) => {
       console.log("new role", role);
     });
   }
 
-  handleDeleteRole(event: Event) {
-    event.preventDefault();
+  handleDeleteRole() {
     this.authService.deleteRole(this.rolesDeleteForm.value as Role).subscribe((role) => {
       console.log("deleted role", role);
     });
   }
 
-  handleAddPerm(event: Event) {
-    event.preventDefault();
+  handleAddPerm() {
     this.authService.createPerm(this.permsAddForm.value as Perm).subscribe((perm) => {
       console.log("new perm", perm);
     });
   }
 
-  handleDeletePerm(event: Event) {
-    event.preventDefault();
+  handleDeletePerm() {
     this.authService.deletePerm(this.permsDeleteForm.value as Perm).subscribe((perm) => {
       console.log("deleted perm", perm);
     });
+  }
+
+  handleGrantPermToRole() {
+    const { role, perm } = this.rolesPermsForm.value;
+    if (role && perm) {
+      this.authService.grantPermToRole(perm, role).subscribe(res => {
+        console.log(res)
+      });
+    }
   }
 }

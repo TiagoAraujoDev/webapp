@@ -10,20 +10,24 @@ header>img {
   cursor: pointer;
 }
 
-
 ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 14px;
 }
 
 li {
-  text-decoration: underline;
   cursor: pointer;
   list-style-type: none;
 }
 
 li:hover {
   opacity: 0.8;
+}
+
+li>a {
+  font-weight: bold;
+  color: #3C9EA3;
+  text-decoration: none;
 }

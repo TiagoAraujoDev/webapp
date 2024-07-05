@@ -1,80 +1,110 @@
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
   <mat-tab label="Create Role">
-        <h2>Create Roles</h2>
-        <form [formGroup]="rolesAddForm">
-            <mat-form-field class="input-container">
-                <mat-label>Name</mat-label>
-                <input matInput formControlName="role" type="text" />
-            </mat-form-field>
-            <button mat-flat-button (click)="handleAddRole($event)">create</button>
-        </form>
-        <div class="links-container">
-            <mat-icon fontIcon="arrow_back"></mat-icon>
-            <a class="action-link" routerLink="/">
-                Go back
-            </a>
-        </div>
+    <h2>Create Roles</h2>
+    <form [formGroup]="rolesAddForm">
+      <mat-form-field class="input-container">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="role" type="text" />
+      </mat-form-field>
+      <button mat-flat-button (click)="handleAddRole()">create</button>
+    </form>
+    <div class="links-container">
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      <a class="action-link" routerLink="/"> Go back </a>
+    </div>
   </mat-tab>
   <mat-tab label="Delete Role">
-        <h2>Delete Roles</h2>
-        <form [formGroup]="rolesDeleteForm">
-            <mat-form-field class="input-container">
-                    <mat-label>Name</mat-label>
-                    <mat-select formControlName="role">
-                        <mat-option value="">-- SELECT A ROLE --</mat-option>
-                    @for (role of roles; track role.role) {
-                        <mat-option [value]="role.role">
-                            {{role.role}}
-                        </mat-option>
-                    }
-                    </mat-select>
-            </mat-form-field>
-            <button mat-flat-button color="warn" (click)="handleDeleteRole($event)">delete</button>
-        </form>
-        <div class="links-container">
-            <mat-icon fontIcon="arrow_back"></mat-icon>
-            <a class="action-link" routerLink="/">
-                Go back
-            </a>
-        </div>
+    <h2>Delete Roles</h2>
+    <form [formGroup]="rolesDeleteForm">
+      <mat-form-field class="input-container">
+        <mat-label>Name</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="">-- SELECT A ROLE --</mat-option>
+          @for (role of roles; track role.role) {
+            <mat-option [value]="role.role">
+              {{ role.role }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="warn" (click)="handleDeleteRole()">
+        delete
+      </button>
+    </form>
+    <div class="links-container">
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      <a class="action-link" routerLink="/"> Go back </a>
+    </div>
   </mat-tab>
-    <mat-tab label="Create Permission">
-        <h2>Create Permission</h2>
-        <form [formGroup]="permsAddForm">
-            <mat-form-field class="input-container">
-                <mat-label>Name</mat-label>
-                <input matInput formControlName="perm" type="text" />
-            </mat-form-field>
-            <button mat-flat-button (click)="handleAddPerm($event)">create</button>
-        </form>
-        <div class="links-container">
-            <mat-icon fontIcon="arrow_back"></mat-icon>
-            <a class="action-link" routerLink="/">
-                Go back
-            </a>
-        </div>
-    </mat-tab>
-    <mat-tab label="Delete Permission">
-        <h2>Delete Permission</h2>
-        <form [formGroup]="permsDeleteForm">
-            <mat-form-field class="input-container">
-                    <mat-label>Name</mat-label>
-                    <mat-select formControlName="perm">
-                        <mat-option value="">-- SELECT A PERMISSION --</mat-option>
-                    @for (perm of perms; track perm.perm) {
-                        <mat-option [value]="perm.perm">
-                            {{perm.perm}}
-                        </mat-option>
-                    }
-                    </mat-select>
-            </mat-form-field>
-            <button mat-flat-button color="warn" (click)="handleDeletePerm($event)">delete</button>
-        </form>
-        <div class="links-container">
-            <mat-icon fontIcon="arrow_back"></mat-icon>
-            <a class="action-link" routerLink="/">
-                Go back
-            </a>
-        </div>
-    </mat-tab>
+  <mat-tab label="Create Permission">
+    <h2>Create Permission</h2>
+    <form [formGroup]="permsAddForm">
+      <mat-form-field class="input-container">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="perm" type="text" />
+      </mat-form-field>
+      <button mat-flat-button (click)="handleAddPerm()">create</button>
+    </form>
+    <div class="links-container">
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      <a class="action-link" routerLink="/"> Go back </a>
+    </div>
+  </mat-tab>
+  <mat-tab label="Delete Permission">
+    <h2>Delete Permission</h2>
+    <form [formGroup]="permsDeleteForm">
+      <mat-form-field class="input-container">
+        <mat-label>Name</mat-label>
+        <mat-select formControlName="perm">
+          <mat-option value="">-- SELECT A PERMISSION --</mat-option>
+          @for (perm of perms; track perm.perm) {
+            <mat-option [value]="perm.perm">
+              {{ perm.perm }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="warn" (click)="handleDeletePerm()">
+        delete
+      </button>
+    </form>
+    <div class="links-container">
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      <a class="action-link" routerLink="/"> Go back </a>
+    </div>
+  </mat-tab>
+  <mat-tab label="Grant Permission">
+    <h2>Grant permission to a role</h2>
+    <form [formGroup]="rolesPermsForm">
+      <mat-form-field class="input-container">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="">-- SELECT A ROLE --</mat-option>
+          @for (role of roles; track role.role) {
+            <mat-option [value]="role.role">
+              {{ role.role }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="input-container">
+        <mat-label>Permission</mat-label>
+        <mat-select formControlName="perm">
+          <mat-option value="">-- SELECT A PERMISSION --</mat-option>
+          @for (perm of perms; track perm.perm) {
+            <mat-option [value]="perm.perm">
+              {{ perm.perm }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button (click)="handleGrantPermToRole()">
+        Grant permission
+      </button>
+    </form>
+    <div class="links-container">
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      <a class="action-link" routerLink="/"> Go back </a>
+    </div>
+  </mat-tab>
 </mat-tab-group>

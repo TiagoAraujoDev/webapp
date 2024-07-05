@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { User } from "../../../@types/auth";
 import { MatIconModule } from "@angular/material/icon";
@@ -13,12 +13,12 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   selector: "naval-list-users",
   standalone: true,
   imports: [
+    RouterLink,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
-    RouterLink,
     MatProgressSpinnerModule,
   ],
   templateUrl: "./list-users.component.html",
@@ -35,6 +35,9 @@ export class ListUsersComponent {
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  // TODO: Use @ViewChild to filter
+  // @ViewChild("input") filterInput!: ElementRef<HTMLInputElement>;
+  // protected filteredUsers!: User[];
 
   constructor(private authService: AuthService) { }
 
@@ -46,6 +49,10 @@ export class ListUsersComponent {
   }
 
   filterUsers({ target }: Event) {
+    /* const filterValue = this.filterInput.nativeElement.value.toLowerCase();
+    this.filteredUsers = this.users.filter((user) =>
+      user.name.toLowerCase().includes(filterValue),
+    ); */
     const inputElement = target as HTMLInputElement;
     const filterValue = inputElement.value;
     this.users.filter = filterValue.trim().toLowerCase();
