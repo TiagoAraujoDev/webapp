@@ -1,13 +1,15 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import { RouterLink } from "@angular/router";
+
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { User } from "../../../@types/auth";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { RouterLink } from "@angular/router";
-import { AuthService } from "../../auth.service";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+
+import { User } from "../../../@types/auth";
+import { AuthService } from "../../auth.service";
 
 @Component({
   selector: "naval-list-users",
@@ -19,10 +21,10 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: "./list-users.component.html",
-  styleUrl: "./list-users.component.css",
+  styleUrl: "./list-users.component.css"
 })
 export class ListUsersComponent {
   protected users!: MatTableDataSource<User, MatPaginator>;
@@ -31,7 +33,7 @@ export class ListUsersComponent {
     "name",
     "username",
     "email",
-    "edit_button",
+    "edit_button"
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

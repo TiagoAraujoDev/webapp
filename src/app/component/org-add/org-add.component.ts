@@ -19,10 +19,10 @@ import { Org, OrgData } from "../../../@types/auth";
     MatInputModule,
     MatCardModule,
     MatFormFieldModule,
-    MatButtonModule,
+    MatButtonModule
   ],
   templateUrl: "./org-add.component.html",
-  styleUrl: "./org-add.component.css",
+  styleUrl: "./org-add.component.css"
 })
 export class OrgAddComponent {
   protected org: Org | null = null;
@@ -32,7 +32,7 @@ export class OrgAddComponent {
   protected addOrgForm = new FormGroup({
     name: new FormControl(""),
     cnpj: new FormControl(""),
-    picture: new FormControl(""),
+    picture: new FormControl("")
   });
 
   handleAddOrg() {

@@ -1,6 +1,6 @@
-import {HttpClient} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import _ from "lodash";
 
 import {
@@ -65,7 +65,7 @@ export class AuthService {
     return this.httpService.patch<any>(
       `${this.baseUrl}/auth/users/${_uid}/group`,
       {
-        body: {gid: _gid}
+        body: { gid: _gid }
       }
     );
   }

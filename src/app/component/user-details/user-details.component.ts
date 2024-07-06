@@ -1,20 +1,22 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import _ from "lodash";
+
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
-import { AuthService } from "../../auth.service";
-import { Org, Role, User, UserId } from "../../../@types/auth";
-import { Router } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatIconModule } from "@angular/material/icon";
+
+import { User, UserId } from "../../../@types/auth";
+import { AuthService } from "../../auth.service";
 
 @Component({
   selector: "naval-user-details",
@@ -31,10 +33,10 @@ import { MatIconModule } from "@angular/material/icon";
     MatTabsModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule
   ],
   templateUrl: "./user-details.component.html",
-  styleUrl: "./user-details.component.css",
+  styleUrl: "./user-details.component.css"
 })
 export class UserDetailsComponent implements OnInit {
   protected user!: User;
@@ -46,7 +48,7 @@ export class UserDetailsComponent implements OnInit {
 
   protected enrollForm = new FormGroup({
     gid: new FormControl(""),
-    uid: new FormControl(""),
+    uid: new FormControl("")
   });
 
   protected userUpdateForm = new FormGroup({
@@ -54,12 +56,12 @@ export class UserDetailsComponent implements OnInit {
     username: new FormControl(""),
     email: new FormControl(""),
     active: new FormControl(),
-    verified: new FormControl(),
+    verified: new FormControl()
   });
 
   constructor(
     private authService: AuthService,
-    private router: Router,
+    private router: Router
   ) {}
 
   @Input()
@@ -74,7 +76,7 @@ export class UserDetailsComponent implements OnInit {
   filterUsers() {
     const filterValue = this.userInput.nativeElement.value.toLowerCase();
     this.filteredUsers = this.users.filter((user) =>
-      user.name.toLowerCase().includes(filterValue),
+      user.name.toLowerCase().includes(filterValue)
     );
   }
 
@@ -86,7 +88,7 @@ export class UserDetailsComponent implements OnInit {
 
   handleDeleteUser(): void {
     const uid: UserId = {
-      uid: _.parseInt(this.id),
+      uid: _.parseInt(this.id)
     };
     this.authService.deleteUser(uid).subscribe(() => {
       this.router.navigate(["/users"]);
@@ -99,8 +101,8 @@ export class UserDetailsComponent implements OnInit {
       ...this.user,
       ..._.omitBy(
         _.omitBy(formValue, (v) => _.isNull(v)),
-        (v) => _.isEmpty(v),
-      ),
+        (v) => _.isEmpty(v)
+      )
     };
     this.authService.updateUser(user).subscribe((user) => {
       this.user = user;

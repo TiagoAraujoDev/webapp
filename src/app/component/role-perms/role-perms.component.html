@@ -1,16 +1,33 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+<mat-tab-group
+  mat-stretch-tabs="false"
+  mat-align-tabs="start"
+>
   <mat-tab label="Create Role">
     <h2>Create Roles</h2>
     <form [formGroup]="rolesAddForm">
       <mat-form-field class="input-container">
         <mat-label>Name</mat-label>
-        <input matInput formControlName="role" type="text" />
+        <input
+          matInput
+          formControlName="role"
+          type="text"
+        />
       </mat-form-field>
-      <button mat-flat-button (click)="handleAddRole()">create</button>
+      <button
+        mat-flat-button
+        (click)="handleAddRole()"
+      >
+        create
+      </button>
     </form>
     <div class="links-container">
       <mat-icon fontIcon="arrow_back"></mat-icon>
-      <a class="action-link" routerLink="/"> Go back </a>
+      <a
+        class="action-link"
+        routerLink="/"
+      >
+        Go back
+      </a>
     </div>
   </mat-tab>
   <mat-tab label="Delete Role">
@@ -27,13 +44,22 @@
           }
         </mat-select>
       </mat-form-field>
-      <button mat-flat-button color="warn" (click)="handleDeleteRole()">
+      <button
+        mat-flat-button
+        color="warn"
+        (click)="handleDeleteRole()"
+      >
         delete
       </button>
     </form>
     <div class="links-container">
       <mat-icon fontIcon="arrow_back"></mat-icon>
-      <a class="action-link" routerLink="/"> Go back </a>
+      <a
+        class="action-link"
+        routerLink="/"
+      >
+        Go back
+      </a>
     </div>
   </mat-tab>
   <mat-tab label="Create Permission">
@@ -41,13 +67,27 @@
     <form [formGroup]="permsAddForm">
       <mat-form-field class="input-container">
         <mat-label>Name</mat-label>
-        <input matInput formControlName="perm" type="text" />
+        <input
+          matInput
+          formControlName="perm"
+          type="text"
+        />
       </mat-form-field>
-      <button mat-flat-button (click)="handleAddPerm()">create</button>
+      <button
+        mat-flat-button
+        (click)="handleAddPerm()"
+      >
+        create
+      </button>
     </form>
     <div class="links-container">
       <mat-icon fontIcon="arrow_back"></mat-icon>
-      <a class="action-link" routerLink="/"> Go back </a>
+      <a
+        class="action-link"
+        routerLink="/"
+      >
+        Go back
+      </a>
     </div>
   </mat-tab>
   <mat-tab label="Delete Permission">
@@ -64,13 +104,22 @@
           }
         </mat-select>
       </mat-form-field>
-      <button mat-flat-button color="warn" (click)="handleDeletePerm()">
+      <button
+        mat-flat-button
+        color="warn"
+        (click)="handleDeletePerm()"
+      >
         delete
       </button>
     </form>
     <div class="links-container">
       <mat-icon fontIcon="arrow_back"></mat-icon>
-      <a class="action-link" routerLink="/"> Go back </a>
+      <a
+        class="action-link"
+        routerLink="/"
+      >
+        Go back
+      </a>
     </div>
   </mat-tab>
   <mat-tab label="Grant Permission">
@@ -98,13 +147,21 @@
           }
         </mat-select>
       </mat-form-field>
-      <button mat-flat-button (click)="handleGrantPermToRole()">
+      <button
+        mat-flat-button
+        (click)="handleGrantPermToRole()"
+      >
         Grant permission
       </button>
     </form>
     <div class="links-container">
       <mat-icon fontIcon="arrow_back"></mat-icon>
-      <a class="action-link" routerLink="/"> Go back </a>
+      <a
+        class="action-link"
+        routerLink="/"
+      >
+        Go back
+      </a>
     </div>
   </mat-tab>
 </mat-tab-group>

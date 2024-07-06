@@ -1,28 +1,30 @@
-import { Component, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import { RouterLink } from "@angular/router";
+
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
-import { RouterLink } from "@angular/router";
-import { AuthService } from "../../auth.service";
+
 import { Org } from "../../../@types/auth";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { AuthService } from "../../auth.service";
 
 @Component({
   selector: "naval-org-list",
   standalone: true,
   imports: [
+    RouterLink,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule,
-    RouterLink,
+    MatProgressSpinnerModule
   ],
   templateUrl: "./org-list.component.html",
-  styleUrl: "./org-list.component.css",
+  styleUrl: "./org-list.component.css"
 })
 export class OrgListComponent {
   orgs!: MatTableDataSource<Org, MatPaginator>;

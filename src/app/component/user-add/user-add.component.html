@@ -8,11 +8,19 @@
       <form [formGroup]="addUserForm">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" type="text" />
+          <input
+            matInput
+            formControlName="name"
+            type="text"
+          />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" type="text" />
+          <input
+            matInput
+            formControlName="username"
+            type="text"
+          />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Email</mat-label>
@@ -23,11 +31,20 @@
             type="text"
           />
         </mat-form-field>
-        <button mat-flat-button (click)="handleAddUser($event)">create</button>
+        <button
+          mat-flat-button
+          (click)="handleAddUser($event)"
+        >
+          create
+        </button>
       </form>
     </mat-card-content>
     <mat-card-actions class="action-link-container">
-      <a class="action-link" routerLink="/users">Go back to users list</a>
+      <a
+        class="action-link"
+        routerLink="/users"
+        >Go back to users list</a
+      >
     </mat-card-actions>
   </mat-card>
 } @else if (user) {
@@ -37,7 +54,11 @@
       <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-actions class="action-link-container">
-      <a class="action-link" routerLink="/users">Go back to users list</a>
+      <a
+        class="action-link"
+        routerLink="/users"
+        >Go back to users list</a
+      >
     </mat-card-actions>
   </mat-card>
 }

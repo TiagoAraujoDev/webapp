@@ -1,30 +1,30 @@
-import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
+
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatTabsModule } from "@angular/material/tabs";
-import { Role, Perm } from "../../../@types/auth";
-import { AuthService } from "../../auth.service";
-import { RouterModule } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from "@angular/material/select";
+
+import { Role, Perm } from "../../../@types/auth";
+import { AuthService } from "../../auth.service";
 
 @Component({
   selector: "naval-role-perms",
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatTabsModule,
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule,
-    RouterModule,
+    MatIconModule
   ],
   templateUrl: "./role-perms.component.html",
-  styleUrl: "./role-perms.component.css",
+  styleUrl: "./role-perms.component.css"
 })
 export class RolePermsComponent {
   protected roles!: Role[];
@@ -33,24 +33,24 @@ export class RolePermsComponent {
   constructor(private authService: AuthService) {}
 
   protected rolesAddForm = new FormGroup({
-    role: new FormControl(""),
+    role: new FormControl("")
   });
 
   protected rolesDeleteForm = new FormGroup({
-    role: new FormControl(""),
+    role: new FormControl("")
   });
 
   protected permsAddForm = new FormGroup({
-    perm: new FormControl(""),
+    perm: new FormControl("")
   });
 
   protected permsDeleteForm = new FormGroup({
-    perm: new FormControl(""),
+    perm: new FormControl("")
   });
 
   protected rolesPermsForm = new FormGroup({
     role: new FormControl(""),
-    perm: new FormControl(""),
+    perm: new FormControl("")
   });
 
   ngOnInit() {

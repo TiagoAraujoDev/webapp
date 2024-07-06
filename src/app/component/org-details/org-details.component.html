@@ -1,4 +1,7 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+<mat-tab-group
+  mat-stretch-tabs="false"
+  mat-align-tabs="center"
+>
   <mat-tab label="organization details">
     @if (org) {
       <div class="tab-wrapper">
@@ -22,7 +25,10 @@
           </mat-card-content>
           <mat-card-footer>
             <mat-card-actions>
-              <a routerLink="/orgs" class="actions-container">
+              <a
+                routerLink="/orgs"
+                class="actions-container"
+              >
                 <mat-icon>arrow_back</mat-icon>
                 <span>Go back</span>
               </a>
@@ -43,15 +49,30 @@
     <form [formGroup]="orgUpdateForm">
       <mat-form-field class="input-container">
         <mat-label>Name</mat-label>
-        <input formControlName="name" matInput />
+        <input
+          formControlName="name"
+          matInput
+        />
       </mat-form-field>
       <mat-form-field class="input-container">
         <mat-label>CNPJ</mat-label>
-        <input formControlName="cnpj" matInput />
+        <input
+          formControlName="cnpj"
+          matInput
+        />
       </mat-form-field>
       <div class="button-container">
-        <button (click)="handleUpdateOrg()" mat-flat-button>Update</button>
-        <button (click)="handleDeleteOrg()" mat-flat-button color="warn">
+        <button
+          (click)="handleUpdateOrg()"
+          mat-flat-button
+        >
+          Update
+        </button>
+        <button
+          (click)="handleDeleteOrg()"
+          mat-flat-button
+          color="warn"
+        >
           Delete
         </button>
       </div>
@@ -63,11 +84,18 @@
     <form [formGroup]="enrollForm">
       <mat-form-field class="input-container">
         <mat-label>organization ID</mat-label>
-        <input matInput [value]="id" disabled />
+        <input
+          matInput
+          [value]="id"
+          disabled
+        />
       </mat-form-field>
       <mat-form-field class="input-container">
         <mat-label>Roles</mat-label>
-        <mat-select required formControlName="role">
+        <mat-select
+          required
+          formControlName="role"
+        >
           @for (role of roles; track role.role) {
             <mat-option [value]="role">{{ role.role }}</mat-option>
           }
@@ -93,7 +121,12 @@
           }
         </mat-autocomplete>
       </mat-form-field>
-      <button (click)="handleEnrollUser()" mat-flat-button>Enroll user</button>
+      <button
+        (click)="handleEnrollUser()"
+        mat-flat-button
+      >
+        Enroll user
+      </button>
     </form>
   </mat-tab>
 </mat-tab-group>
