@@ -6,6 +6,6 @@
   "semi": true,
   "printWidth": 80,
   "arrowParens": "always",
-  "singleAttributePerLine": true,
+  "singleAttributePerLine": false,
   "singleQuote": false
 }

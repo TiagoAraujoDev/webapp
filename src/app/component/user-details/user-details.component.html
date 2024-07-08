@@ -1,7 +1,4 @@
-<mat-tab-group
-  mat-stretch-tabs="false"
-  mat-align-tabs="center"
->
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
   <mat-tab label="User details">
     @if (user) {
       <div class="tab-wrapper">
@@ -25,10 +22,7 @@
           </mat-card-content>
           <mat-card-footer>
             <mat-card-actions>
-              <a
-                routerLink="/users"
-                class="actions-container"
-              >
+              <a routerLink="/users" class="actions-container">
                 <mat-icon>arrow_back</mat-icon>
                 <span>Go back</span>
               </a>
@@ -49,17 +43,11 @@
     <form [formGroup]="userUpdateForm">
       <mat-form-field class="input-container">
         <mat-label>Name</mat-label>
-        <input
-          formControlName="name"
-          matInput
-        />
+        <input formControlName="name" matInput />
       </mat-form-field>
       <mat-form-field class="input-container">
         <mat-label>Username</mat-label>
-        <input
-          formControlName="username"
-          matInput
-        />
+        <input formControlName="username" matInput />
       </mat-form-field>
       <mat-form-field class="input-container">
         <mat-label>Email</mat-label>
@@ -70,17 +58,8 @@
         />
       </mat-form-field>
       <div class="button-container">
-        <button
-          (click)="handleUpdateUser()"
-          mat-flat-button
-        >
-          Update
-        </button>
-        <button
-          (click)="handleDeleteUser()"
-          mat-flat-button
-          color="warn"
-        >
+        <button (click)="handleUpdateUser()" mat-flat-button>Update</button>
+        <button (click)="handleDeleteUser()" mat-flat-button color="warn">
           Delete
         </button>
       </div>
@@ -92,11 +71,7 @@
     <form [formGroup]="enrollForm">
       <mat-form-field class="input-container">
         <mat-label>User ID</mat-label>
-        <input
-          matInput
-          [value]="id"
-          disabled
-        />
+        <input matInput [value]="id" disabled />
       </mat-form-field>
       <!-- <mat-form-field class="input-container">
         <mat-label>Roles</mat-label>
@@ -126,12 +101,7 @@
           }
         </mat-autocomplete>
       </mat-form-field>
-      <button
-        (click)="handleEnrollUser()"
-        mat-flat-button
-      >
-        Enroll user
-      </button>
+      <button (click)="handleEnrollUser()" mat-flat-button>Enroll user</button>
     </form>
   </mat-tab>
 </mat-tab-group>

@@ -10,32 +10,17 @@
       <form [formGroup]="addOrgForm">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input
-            matInput
-            formControlName="name"
-            type="text"
-          />
+          <input matInput formControlName="name" type="text" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>CNPJ</mat-label>
-          <input
-            matInput
-            formControlName="cnpj"
-            type="text"
-          />
+          <input matInput formControlName="cnpj" type="text" />
         </mat-form-field>
-        <button
-          mat-flat-button
-          (click)="handleAddOrg()"
-        >
-          create
-        </button>
+        <button mat-flat-button (click)="handleAddOrg()">create</button>
       </form>
     </mat-card-content>
     <mat-card-actions class="action-link-container">
-      <a
-        class="action-link"
-        routerLink="/orgs"
+      <a class="action-link" routerLink="/orgs"
         >Go back to organizations list</a
       >
     </mat-card-actions>
@@ -47,9 +32,7 @@
       <mat-card-subtitle>{{ org.cnpj }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-actions class="action-link-container">
-      <a
-        class="action-link"
-        routerLink="/orgs"
+      <a class="action-link" routerLink="/orgs"
         >Go back to organizations list</a
       >
     </mat-card-actions>
