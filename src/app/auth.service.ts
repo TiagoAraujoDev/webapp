@@ -11,7 +11,8 @@ import {
   UserId,
   OrgData,
   UserData,
-  Role
+  Role,
+  GroupUserResponse
 } from "../@types/auth";
 
 @Injectable({
@@ -49,23 +50,24 @@ export class AuthService {
     );
   }
 
-  groupUser(uid: string, gid: string): Observable<any> {
-    const body = {
-      gid: _.parseInt(gid)
-    };
-    return this.httpService.put<any>(
-      `${this.baseUrl}/auth/users/${_.parseInt(uid)}/group`,
-      body
+  groupUser(uid: string, gid: string): Observable<GroupUserResponse> {
+    const _uid = _.parseInt(uid);
+    const _gid = _.parseInt(gid);
+    return this.httpService.put<GroupUserResponse>(
+      `${this.baseUrl}/auth/users/${_uid}/group`,
+      {
+        gid: _gid
+      }
     );
   }
 
-  ungroupUser(uid: string, gid: string): Observable<any> {
+  ungroupUser(uid: string, gid: string): Observable<GroupUserResponse> {
     const _uid = _.parseInt(uid);
     const _gid = _.parseInt(gid);
-    return this.httpService.patch<any>(
+    return this.httpService.patch<GroupUserResponse>(
       `${this.baseUrl}/auth/users/${_uid}/group`,
       {
-        body: { gid: _gid }
+        gid: _gid
       }
     );
   }
@@ -97,13 +99,22 @@ export class AuthService {
   }
 
   enrollUser(oid: string, uid: string, role: Role): Observable<any> {
-    const body = {
-      uid: _.parseInt(uid),
-      role: role.role
-    };
     return this.httpService.put<Org>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
-      body
+      {
+        uid: _.parseInt(uid),
+        role: role.role
+      }
+    );
+  }
+
+  removeUser(oid: string, uid: string, role: Role): Observable<any> {
+    return this.httpService.patch<Org>(
+      `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
+      {
+        uid: _.parseInt(uid),
+        role: role.role
+      }
     );
   }
 

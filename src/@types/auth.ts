@@ -12,6 +12,7 @@ export interface User {
   username: string;
   email: string;
   name: string;
+  groups: number[];
   picture: string;
   verified: boolean;
   active: boolean;
@@ -35,3 +36,9 @@ export interface Org {
 export type OrgId = Pick<Org, "oid">;
 
 export type OrgData = Omit<Org, "oid">;
+
+export type GroupUserResponse = {
+  uid: number;
+  gid: number;
+  created_at: Date;
+};

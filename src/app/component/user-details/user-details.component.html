@@ -67,20 +67,12 @@
   </mat-tab>
   <mat-tab label="Enroll user">
     <h2>Enroll</h2>
-    <p>Enroll an user to an organization.</p>
-    <form [formGroup]="enrollForm">
+    <p>Enroll an user to an group.</p>
+    <form [formGroup]="groupUserForm">
       <mat-form-field class="input-container">
         <mat-label>User ID</mat-label>
         <input matInput [value]="id" disabled />
       </mat-form-field>
-      <!-- <mat-form-field class="input-container">
-        <mat-label>Roles</mat-label>
-        <mat-select required formControlName="role">
-          @for (role of roles; track role.role) {
-          <mat-option [value]="role.role">{{ role.role }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field> -->
       <mat-form-field class="input-container">
         <mat-label>Group ID</mat-label>
         <input
@@ -93,15 +85,49 @@
           (input)="filterUsers()"
           (focus)="filterUsers()"
           formControlName="gid"
-          [matAutocomplete]="auto"
+          [matAutocomplete]="usersAutocomplete"
         />
-        <mat-autocomplete #auto="matAutocomplete">
+        <mat-autocomplete #usersAutocomplete="matAutocomplete">
           @for (user of filteredUsers; track user.uid) {
             <mat-option [value]="user.uid">{{ user.name }}</mat-option>
           }
         </mat-autocomplete>
       </mat-form-field>
-      <button (click)="handleEnrollUser()" mat-flat-button>Enroll user</button>
+      <button (click)="handleGroupUser()" mat-flat-button>Enroll user</button>
+    </form>
+  </mat-tab>
+
+  <mat-tab label="Ungroup user" [disabled]="noGroups">
+    <h2>Ungroup</h2>
+    <p>Ungroup an user from a group.</p>
+    <form [formGroup]="ungroupUserForm">
+      <mat-form-field class="input-container">
+        <mat-label>User ID</mat-label>
+        <input matInput [value]="id" disabled />
+      </mat-form-field>
+      <mat-form-field class="input-container">
+        <mat-label>Group ID</mat-label>
+        <input
+          #groupInput
+          type="text"
+          required
+          placeholder="Select an group..."
+          aria-label="group 2"
+          matInput
+          (input)="filterGroups()"
+          (focus)="filterGroups()"
+          formControlName="gid"
+          [matAutocomplete]="groupAutocomplete"
+        />
+        <mat-autocomplete #groupAutocomplete="matAutocomplete">
+          @for (group of filteredGroups; track group.uid) {
+            <mat-option [value]="group.uid">{{ group.name }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <button (click)="handleUngroupUser()" mat-flat-button>
+        Ungroup user
+      </button>
     </form>
   </mat-tab>
 </mat-tab-group>

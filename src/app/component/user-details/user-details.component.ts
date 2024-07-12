@@ -38,15 +38,24 @@ import { AuthService } from "../../auth.service";
   templateUrl: "./user-details.component.html",
   styleUrl: "./user-details.component.css"
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent {
+  protected users!: User[];
   protected user!: User;
   protected id!: string;
-  protected users!: User[];
+  protected groups!: User[];
   protected filteredUsers!: User[];
+  protected filteredGroups!: User[];
+  protected noGroups = true;
 
   @ViewChild("userInput") userInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("groupInput") groupInput!: ElementRef<HTMLInputElement>;
 
-  protected enrollForm = new FormGroup({
+  protected groupUserForm = new FormGroup({
+    gid: new FormControl(""),
+    uid: new FormControl("")
+  });
+
+  protected ungroupUserForm = new FormGroup({
     gid: new FormControl(""),
     uid: new FormControl("")
   });
@@ -66,10 +75,23 @@ export class UserDetailsComponent implements OnInit {
 
   @Input()
   set user_id(user_id: string) {
-    const u = { uid: _.parseInt(user_id) };
-    this.authService.getUser(u).subscribe((user) => {
-      this.user = user;
-      this.id = user_id;
+    this.id = user_id;
+    this.authService.getUsers().subscribe((users) => {
+      this.users = users;
+      const user = this.users.find((user) => {
+        return user.uid === _.parseInt(this.id);
+      });
+      if (!user) {
+        return;
+      } else {
+        this.user = user;
+        if (_.isArray(this.user.groups)) {
+          this.noGroups = false;
+          this.groups = this.users.filter((users) => {
+            return this.user.groups.includes(users.uid);
+          });
+        }
+      }
     });
   }
 
@@ -80,10 +102,12 @@ export class UserDetailsComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-    this.authService.getUsers().subscribe((users) => {
-      this.users = users;
-    });
+  filterGroups() {
+    console.log(this.filteredGroups);
+    const filterValue = this.groupInput.nativeElement.value.toLowerCase();
+    this.filteredGroups = this.groups.filter((group) =>
+      group.name.toLowerCase().includes(filterValue)
+    );
   }
 
   handleDeleteUser(): void {
@@ -107,16 +131,33 @@ export class UserDetailsComponent implements OnInit {
     this.authService.updateUser(user).subscribe((user) => {
       this.user = user;
     });
-
     this.userUpdateForm.reset();
   }
 
-  handleEnrollUser() {
-    this.enrollForm.get("uid")?.setValue(this.id);
-    const { uid, gid } = this.enrollForm.value;
+  handleGroupUser() {
+    this.groupUserForm.get("uid")?.setValue(this.id);
+    const { uid, gid } = this.groupUserForm.value;
     if (uid && gid) {
       this.authService.groupUser(uid, gid).subscribe((res) => {
-        console.log(res);
+        const newGroup = this.users.find((user) => {
+          return user.uid === res.gid;
+        });
+        this.groups = [...this.groups, newGroup!];
+        this.groupUserForm.get("gid")?.reset();
+      });
+    }
+  }
+
+  handleUngroupUser() {
+    this.ungroupUserForm.get("uid")?.setValue(this.id);
+    const { uid, gid } = this.ungroupUserForm.value;
+    if (uid && gid) {
+      this.authService.ungroupUser(uid, gid).subscribe((res) => {
+        const filteredGroup = this.users.filter((user) => {
+          return user.uid !== res.gid;
+        });
+        this.groups = filteredGroup;
+        this.groupUserForm.get("gid")?.reset();
       });
     }
   }
