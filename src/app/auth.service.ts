@@ -108,7 +108,7 @@ export class AuthService {
     );
   }
 
-  removeUser(oid: string, uid: string, role: Role): Observable<any> {
+  unrollUser(oid: string, uid: string, role: Role): Observable<any> {
     return this.httpService.patch<Org>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
       {

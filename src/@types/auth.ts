@@ -13,6 +13,7 @@ export interface User {
   email: string;
   name: string;
   groups: number[];
+  roles: { oid: number; role: string }[];
   picture: string;
   verified: boolean;
   active: boolean;
@@ -30,6 +31,7 @@ export interface Org {
   cnpj: string;
   id_type: string;
   name: string;
+  roles: { role: string; user: number }[];
   picture?: string | null;
 }
 

@@ -1,6 +1,6 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
-  <mat-tab label="organization details">
-    @if (org) {
+@if (!isLoading) {
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+    <mat-tab label="Organization details">
       <div class="tab-wrapper">
         <mat-card>
           <mat-card-header>
@@ -30,70 +30,121 @@
           </mat-card-footer>
         </mat-card>
       </div>
-    }
-    @if (!org) {
+    </mat-tab>
+    <mat-tab label="Update organization">
+      <h2>Update organization information</h2>
+      <p>Fill in the necessary information.</p>
+      <form [formGroup]="orgUpdateForm">
+        <mat-form-field class="input-container">
+          <mat-label>Name</mat-label>
+          <input formControlName="name" matInput />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>CNPJ</mat-label>
+          <input formControlName="cnpj" matInput />
+        </mat-form-field>
+        <div class="button-container">
+          <button (click)="handleUpdateOrg()" mat-flat-button>Update</button>
+          <button (click)="handleDeleteOrg()" mat-flat-button color="warn">
+            Delete
+          </button>
+        </div>
+      </form>
+    </mat-tab>
+    <mat-tab label="Enroll to organization">
+      <h2>Enroll</h2>
+      <p>Enroll an user to an organization.</p>
+      <form [formGroup]="enrollForm">
+        <mat-form-field class="input-container">
+          <mat-label>organization ID</mat-label>
+          <input matInput [value]="org.oid" disabled />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>Roles</mat-label>
+          <mat-select required formControlName="role">
+            @for (role of roles; track role.role) {
+              <mat-option [value]="role">{{ role.role }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>User ID</mat-label>
+          <input
+            #userToEnrollInput
+            type="text"
+            required
+            placeholder="Select an user..."
+            aria-label="user"
+            matInput
+            (input)="filterUsersToEnroll()"
+            (focus)="filterUsersToEnroll()"
+            formControlName="uid"
+            [matAutocomplete]="enrollUserAutocomplete"
+          />
+          <mat-autocomplete #enrollUserAutocomplete="matAutocomplete">
+            @for (user of filteredUsersToEnroll; track user.uid) {
+              <mat-option [value]="user.uid">{{ user.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <button (click)="handleEnrollUser()" mat-flat-button>
+          Enroll user
+        </button>
+      </form>
+    </mat-tab>
+
+    <mat-tab label="Unroll from organization">
+      <h2>Unroll</h2>
+      <p>Unroll an user from an organization.</p>
+      <form [formGroup]="unrollForm">
+        <mat-form-field class="input-container">
+          <mat-label>organization ID</mat-label>
+          <input matInput [value]="org.oid" disabled />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>User ID</mat-label>
+          <input
+            #userToUnrollInput
+            type="text"
+            required
+            placeholder="Select an user..."
+            aria-label="user"
+            matInput
+            (input)="filterUserstoUnroll()"
+            (focus)="filterUserstoUnroll()"
+            (blur)="onSelectedUser()"
+            formControlName="uid"
+            [matAutocomplete]="unrollUserAutocomplete"
+          />
+          <mat-autocomplete #unrollUserAutocomplete="matAutocomplete">
+            @for (user of filteredUsersToUnroll; track user.uid) {
+              <mat-option [value]="user.uid">{{ user.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>Roles</mat-label>
+          <mat-select formControlName="role">
+            @for (role of enrolledUserRoles; track role.role) {
+              <mat-option [value]="role">{{ role.role }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button (click)="handleUnrollUser()" mat-flat-button>
+          Unroll user
+        </button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+} @else {
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+    <mat-tab label="Organization details">
       <div class="tab-wrapper">
         <mat-spinner></mat-spinner>
       </div>
-    }
-  </mat-tab>
-  <mat-tab label="Update organization">
-    <h2>Update organization information</h2>
-    <p>Fill in the necessary information.</p>
-    <form [formGroup]="orgUpdateForm">
-      <mat-form-field class="input-container">
-        <mat-label>Name</mat-label>
-        <input formControlName="name" matInput />
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>CNPJ</mat-label>
-        <input formControlName="cnpj" matInput />
-      </mat-form-field>
-      <div class="button-container">
-        <button (click)="handleUpdateOrg()" mat-flat-button>Update</button>
-        <button (click)="handleDeleteOrg()" mat-flat-button color="warn">
-          Delete
-        </button>
-      </div>
-    </form>
-  </mat-tab>
-  <mat-tab label="Enroll to organization">
-    <h2>Enroll</h2>
-    <p>Enroll an user to an organization.</p>
-    <form [formGroup]="enrollForm">
-      <mat-form-field class="input-container">
-        <mat-label>organization ID</mat-label>
-        <input matInput [value]="id" disabled />
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>Roles</mat-label>
-        <mat-select required formControlName="role">
-          @for (role of roles; track role.role) {
-            <mat-option [value]="role">{{ role.role }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>User ID</mat-label>
-        <input
-          #userInput
-          type="text"
-          required
-          placeholder="Select an user..."
-          aria-label="user"
-          matInput
-          (input)="filterUsers()"
-          (focus)="filterUsers()"
-          formControlName="uid"
-          [matAutocomplete]="auto"
-        />
-        <mat-autocomplete #auto="matAutocomplete">
-          @for (user of filteredUsers; track user.uid) {
-            <mat-option [value]="user.uid">{{ user.name }}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-      <button (click)="handleEnrollUser()" mat-flat-button>Enroll user</button>
-    </form>
-  </mat-tab>
-</mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Update organization" disabled> </mat-tab>
+    <mat-tab label="Enroll to organization" disabled> </mat-tab>
+    <mat-tab label="Unroll from organization" disabled> </mat-tab>
+  </mat-tab-group>
+}
