@@ -12,7 +12,8 @@ import {
   OrgData,
   UserData,
   Role,
-  GroupUserResponse
+  GroupUserResponse,
+  EnrollToOrgResponse
 } from "../@types/auth";
 
 @Injectable({
@@ -98,8 +99,8 @@ export class AuthService {
     return this.httpService.delete<Org>(`${this.baseUrl}/auth/orgs/${org.oid}`);
   }
 
-  enrollUser(oid: string, uid: string, role: Role): Observable<any> {
-    return this.httpService.put<Org>(
+  enrollUser(oid: string, uid: string, role: Role): Observable<EnrollToOrgResponse[]> {
+    return this.httpService.put<EnrollToOrgResponse[]>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
       {
         uid: _.parseInt(uid),
@@ -108,8 +109,8 @@ export class AuthService {
     );
   }
 
-  unrollUser(oid: string, uid: string, role: Role): Observable<any> {
-    return this.httpService.patch<Org>(
+  unrollUser(oid: string, uid: string, role: Role): Observable<EnrollToOrgResponse[]> {
+    return this.httpService.patch<EnrollToOrgResponse[]>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
       {
         uid: _.parseInt(uid),

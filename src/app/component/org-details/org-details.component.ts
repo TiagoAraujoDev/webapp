@@ -47,7 +47,6 @@ import { AuthService } from "../../auth.service";
 })
 export class OrgDetailsComponent {
   protected org!: Org;
-  protected noRoles = true;
   protected roles!: Role[];
   protected users!: User[];
   protected enrolledUsers: User[] = [];
@@ -80,6 +79,8 @@ export class OrgDetailsComponent {
   userToEnrollInput!: ElementRef<HTMLInputElement>;
   @ViewChild("userToUnrollInput")
   userToUnrollInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("roleInput")
+  roleInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private authService: AuthService,
@@ -102,6 +103,7 @@ export class OrgDetailsComponent {
       enrolledUsersIds = org.roles.map((role) => role.user);
       this.users.forEach((user) => {
         if (enrolledUsersIds.includes(user.uid)) {
+          console.log(user)
           this.enrolledUsers = [...this.enrolledUsers, user];
         }
       });
@@ -123,24 +125,19 @@ export class OrgDetailsComponent {
     this.filteredUsersToUnroll = this.enrolledUsers.filter((user) =>
       user.name.toLowerCase().includes(filterValue)
     );
-    // ISSUE: This is the best way...???
     this.unrollForm.get("role")?.disable();
   }
 
-  onSelectedUser() {
+  onSelectUser() {
     // FIX: Remove some unnecessary code
-    console.log("selected");
     const uid = this.unrollForm.get("uid")?.value;
     if (uid) {
-      this.noRoles = true;
       const selectedUser = this.enrolledUsers.find(
         (user) => user.uid === _.parseInt(uid)
       );
       if (selectedUser) {
         this.enrolledUserRoles = selectedUser?.roles;
         this.unrollForm.get("role")?.enable();
-      } else {
-        this.unrollForm.get("role")?.disable();
       }
     }
   }
@@ -172,16 +169,24 @@ export class OrgDetailsComponent {
     this.enrollForm.get("oid")?.setValue(_.toString(this.org.oid));
     const { oid, uid, role } = this.enrollForm.value;
     if (uid && role?.role && oid) {
-      this.authService.enrollUser(oid, uid, role).subscribe((res) => {
-        console.log(res);
+      this.authService.enrollUser(oid, uid, role).subscribe((out) => {
+        const [ responseObject ] = out;
+        let user = this.users.find((user) => user.uid === responseObject.uid)
+        user = { ...user, roles: [{ oid: responseObject.oid, role: responseObject.role }]}
+        console.log(user);
+        this.enrolledUsers = [
+          ...this.enrolledUsers,
+          user!
+        ]
       });
     }
   }
 
   handleUnrollUser() {
     // TODO: Reset inputs and update the relation
-    this.enrollForm.get("oid")?.setValue(_.toString(this.org.oid));
-    const { oid, uid, role } = this.enrollForm.value;
+    console.log("here")
+    this.unrollForm.get("oid")?.setValue(_.toString(this.org.oid));
+    const { oid, uid, role } = this.unrollForm.value;
     if (uid && role?.role && oid) {
       this.authService.unrollUser(oid, uid, role).subscribe((res) => {
         console.log(res);

@@ -44,3 +44,14 @@ export type GroupUserResponse = {
   gid: number;
   created_at: Date;
 };
+
+export type EnrollToOrgResponse = {
+  uid: number;
+  oid: number;
+  role: string
+  eid: number;
+  active: boolean;
+  created_at: Date;
+  valid_since: Date;
+  valid_until: Date | null;
+}

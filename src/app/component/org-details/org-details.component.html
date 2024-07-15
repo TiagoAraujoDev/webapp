@@ -112,7 +112,7 @@
             matInput
             (input)="filterUserstoUnroll()"
             (focus)="filterUserstoUnroll()"
-            (blur)="onSelectedUser()"
+            (blur)="onSelectUser()"
             formControlName="uid"
             [matAutocomplete]="unrollUserAutocomplete"
           />
@@ -124,7 +124,7 @@
         </mat-form-field>
         <mat-form-field class="input-container">
           <mat-label>Roles</mat-label>
-          <mat-select formControlName="role">
+          <mat-select #roleInput formControlName="role">
             @for (role of enrolledUserRoles; track role.role) {
               <mat-option [value]="role">{{ role.role }}</mat-option>
             }
