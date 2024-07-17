@@ -1,5 +1,9 @@
 @if (!isLoading) {
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+  <mat-tab-group
+    [(selectedIndex)]="selectedTab"
+    mat-stretch-tabs="false"
+    mat-align-tabs="center"
+  >
     <mat-tab label="Organization details">
       <div class="tab-wrapper">
         <mat-card>
@@ -60,14 +64,6 @@
           <input matInput [value]="org.oid" disabled />
         </mat-form-field>
         <mat-form-field class="input-container">
-          <mat-label>Roles</mat-label>
-          <mat-select required formControlName="role">
-            @for (role of roles; track role.role) {
-              <mat-option [value]="role">{{ role.role }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="input-container">
           <mat-label>User ID</mat-label>
           <input
             #userToEnrollInput
@@ -78,6 +74,7 @@
             matInput
             (input)="filterUsersToEnroll()"
             (focus)="filterUsersToEnroll()"
+            (blur)="onSelectUserToEnroll()"
             formControlName="uid"
             [matAutocomplete]="enrollUserAutocomplete"
           />
@@ -87,13 +84,25 @@
             }
           </mat-autocomplete>
         </mat-form-field>
-        <button (click)="handleEnrollUser()" mat-flat-button>
+        <mat-form-field class="input-container">
+          <mat-label>Roles</mat-label>
+          <mat-select formControlName="role">
+            @for (role of rolesAvailables; track role) {
+              <mat-option [value]="role">{{ role }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button
+          (click)="handleEnrollUser()"
+          mat-flat-button
+          [disabled]="validateEnrollFormFields()"
+        >
           Enroll user
         </button>
       </form>
     </mat-tab>
 
-    <mat-tab label="Unroll from organization">
+    <mat-tab label="Unroll from organization" [disabled]="noUserEnrolled">
       <h2>Unroll</h2>
       <p>Unroll an user from an organization.</p>
       <form [formGroup]="unrollForm">
@@ -112,7 +121,7 @@
             matInput
             (input)="filterUserstoUnroll()"
             (focus)="filterUserstoUnroll()"
-            (blur)="onSelectUser()"
+            (blur)="onSelectUserToUnroll()"
             formControlName="uid"
             [matAutocomplete]="unrollUserAutocomplete"
           />
@@ -125,12 +134,16 @@
         <mat-form-field class="input-container">
           <mat-label>Roles</mat-label>
           <mat-select #roleInput formControlName="role">
-            @for (role of enrolledUserRoles; track role.role) {
-              <mat-option [value]="role">{{ role.role }}</mat-option>
+            @for (role of enrolledUserRoles; track role) {
+              <mat-option [value]="role">{{ role }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
-        <button (click)="handleUnrollUser()" mat-flat-button>
+        <button
+          (click)="handleUnrollUser()"
+          mat-flat-button
+          [disabled]="validateUnrollFormFields()"
+        >
           Unroll user
         </button>
       </form>

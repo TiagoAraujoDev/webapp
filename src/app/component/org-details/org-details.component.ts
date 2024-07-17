@@ -48,26 +48,26 @@ import { AuthService } from "../../auth.service";
 export class OrgDetailsComponent {
   protected org!: Org;
   protected roles!: Role[];
+  protected rolesAvailables!: string[];
   protected users!: User[];
   protected enrolledUsers: User[] = [];
-  protected enrolledUserRoles!: { oid: number; role: string }[];
+  protected enrolledUserRoles!: string[];
   protected filteredUsersToEnroll!: User[];
   protected filteredUsersToUnroll!: User[];
   protected isLoading = false;
+  protected selectedTab = 0;
+  protected noUserEnrolled = false;
 
   protected enrollForm = new FormGroup({
     uid: new FormControl(""),
-    oid: new FormControl(""),
-    role: new FormControl<Role>({ role: "" })
+    oid: new FormControl("", Validators.required),
+    role: new FormControl({ value: "", disabled: true }, Validators.required)
   });
 
   protected unrollForm = new FormGroup({
     uid: new FormControl(""),
-    oid: new FormControl(""),
-    role: new FormControl<Role>(
-      { value: { role: "" }, disabled: true },
-      Validators.required
-    )
+    oid: new FormControl("", Validators.required),
+    role: new FormControl({ value: "", disabled: true }, Validators.required)
   });
 
   protected orgUpdateForm = new FormGroup({
@@ -79,8 +79,6 @@ export class OrgDetailsComponent {
   userToEnrollInput!: ElementRef<HTMLInputElement>;
   @ViewChild("userToUnrollInput")
   userToUnrollInput!: ElementRef<HTMLInputElement>;
-  @ViewChild("roleInput")
-  roleInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private authService: AuthService,
@@ -100,10 +98,14 @@ export class OrgDetailsComponent {
       this.org = org;
       this.users = users;
       this.roles = roles;
+      if (this.org.roles === null) {
+        this.noUserEnrolled = true;
+        this.isLoading = false;
+        return;
+      }
       enrolledUsersIds = org.roles.map((role) => role.user);
       this.users.forEach((user) => {
         if (enrolledUsersIds.includes(user.uid)) {
-          console.log(user)
           this.enrolledUsers = [...this.enrolledUsers, user];
         }
       });
@@ -117,6 +119,10 @@ export class OrgDetailsComponent {
     this.filteredUsersToEnroll = this.users.filter((user) =>
       user.name.toLowerCase().includes(filterValue)
     );
+    const role_input = this.enrollForm.get("role");
+    if (!role_input) return;
+    role_input.disable({ onlySelf: true });
+    role_input.value !== "" ? role_input.reset() : null;
   }
 
   filterUserstoUnroll() {
@@ -125,20 +131,77 @@ export class OrgDetailsComponent {
     this.filteredUsersToUnroll = this.enrolledUsers.filter((user) =>
       user.name.toLowerCase().includes(filterValue)
     );
-    this.unrollForm.get("role")?.disable();
+    const role_input = this.unrollForm.get("role");
+    if (!role_input) return;
+    role_input.disable({ onlySelf: true });
+    role_input.value !== "" ? role_input.reset() : null;
   }
 
-  onSelectUser() {
-    // FIX: Remove some unnecessary code
+  onSelectUserToEnroll() {
+    // TODO: Filter the roles for the selected user
+    const uid = this.enrollForm.get("uid")?.value;
+    if (uid) {
+      const selectedUser = this.users.find(
+        (user) => user.uid === _.parseInt(uid)
+      );
+      if (selectedUser) {
+        const org_id = this.org.oid;
+        // Filter only roles in this org and transform in a role[]
+        const rolesInCurrentOrg = selectedUser.roles
+          .filter((role) => role.org === org_id)
+          .map((role) => role.role);
+        this.rolesAvailables = this.roles
+          .filter((role) => {
+            return !rolesInCurrentOrg.includes(role.role);
+          })
+          .map((role) => {
+            return role.role;
+          });
+        this.enrollForm.get("role")?.enable();
+      }
+    }
+  }
+
+  onSelectUserToUnroll() {
     const uid = this.unrollForm.get("uid")?.value;
     if (uid) {
       const selectedUser = this.enrolledUsers.find(
         (user) => user.uid === _.parseInt(uid)
       );
       if (selectedUser) {
-        this.enrolledUserRoles = selectedUser?.roles;
+        const org_id = this.org.oid;
+        const rolesInCurrentOrg = selectedUser.roles
+          .filter((role) => role.org === org_id)
+          .map((role) => role.role);
+        this.enrolledUserRoles = rolesInCurrentOrg;
         this.unrollForm.get("role")?.enable();
       }
+    }
+  }
+
+  validateEnrollFormFields() {
+    const uid_field = this.enrollForm.get("uid");
+    const role_field = this.enrollForm.get("role");
+    if (uid_field && role_field) {
+      return (
+        uid_field.hasError("required") ||
+        (role_field.enabled ? role_field.hasError("required") : true)
+      );
+    } else {
+      return true;
+    }
+  }
+
+  validateUnrollFormFields() {
+    const uid_field = this.unrollForm.get("uid");
+    const role_field = this.unrollForm.get("role");
+    if (uid_field && role_field) {
+      return (
+        uid_field.hasError("required") ||
+        (role_field.enabled ? role_field.hasError("required") : true)
+      );
+    } else {
+      return true;
     }
   }
 
@@ -165,32 +228,67 @@ export class OrgDetailsComponent {
   }
 
   handleEnrollUser() {
-    // TODO: Reset inputs and update the relation
     this.enrollForm.get("oid")?.setValue(_.toString(this.org.oid));
     const { oid, uid, role } = this.enrollForm.value;
-    if (uid && role?.role && oid) {
-      this.authService.enrollUser(oid, uid, role).subscribe((out) => {
-        const [ responseObject ] = out;
-        let user = this.users.find((user) => user.uid === responseObject.uid)
-        user = { ...user, roles: [{ oid: responseObject.oid, role: responseObject.role }]}
-        console.log(user);
-        this.enrolledUsers = [
-          ...this.enrolledUsers,
-          user!
-        ]
+    if (uid && role && oid) {
+      this.authService.enrollUser(oid, uid, { role }).subscribe((res) => {
+        const [responseObject] = res;
+        let user = this.users.find((user) => user.uid === responseObject.uid);
+        if (!user) return;
+        user = {
+          ...user,
+          roles: [
+            ...user.roles,
+            { org: responseObject.oid, role: responseObject.role }
+          ]
+        };
+        this.enrolledUsers = this.enrolledUsers.map((u) => {
+          if (u.uid === user.uid) return user;
+          return u;
+        });
+        this.users = this.users.map((u) => {
+          if (u.uid === user.uid) return user;
+          return u;
+        });
       });
     }
+    this.enrollForm.reset();
+    this.selectedTab = 0;
   }
 
   handleUnrollUser() {
-    // TODO: Reset inputs and update the relation
-    console.log("here")
     this.unrollForm.get("oid")?.setValue(_.toString(this.org.oid));
     const { oid, uid, role } = this.unrollForm.value;
-    if (uid && role?.role && oid) {
-      this.authService.unrollUser(oid, uid, role).subscribe((res) => {
-        console.log(res);
+    if (uid && role && oid) {
+      this.authService.unrollUser(oid, uid, { role }).subscribe((res) => {
+        const [responseObject] = res;
+        let user = this.users.find((user) => user.uid === responseObject.uid);
+        if (!user) return;
+        if (user.roles.length === 1) {
+          this.enrolledUsers = this.enrolledUsers.filter(
+            (u) => u.uid !== user?.uid
+          );
+        } else {
+          user = {
+            ...user,
+            roles: user.roles.filter(
+              (role) => role.role !== responseObject.role
+            )
+          };
+          // Update enrolledUsers
+          this.enrolledUsers = this.enrolledUsers.map((u) => {
+            if (u.uid === user?.uid) return user;
+            return u;
+          });
+          // Update users
+          this.users = this.users.map((u) => {
+            if (u.uid === user?.uid) return user;
+            return u;
+          });
+        }
       });
     }
+    this.unrollForm.reset();
+    this.selectedTab = 0;
   }
 }

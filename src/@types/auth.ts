@@ -13,7 +13,7 @@ export interface User {
   email: string;
   name: string;
   groups: number[];
-  roles: { oid: number; role: string }[];
+  roles: { org: number; role: string }[];
   picture: string;
   verified: boolean;
   active: boolean;
@@ -48,10 +48,10 @@ export type GroupUserResponse = {
 export type EnrollToOrgResponse = {
   uid: number;
   oid: number;
-  role: string
+  role: string;
   eid: number;
   active: boolean;
   created_at: Date;
   valid_since: Date;
   valid_until: Date | null;
-}
+};

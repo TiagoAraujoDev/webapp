@@ -99,7 +99,11 @@ export class AuthService {
     return this.httpService.delete<Org>(`${this.baseUrl}/auth/orgs/${org.oid}`);
   }
 
-  enrollUser(oid: string, uid: string, role: Role): Observable<EnrollToOrgResponse[]> {
+  enrollUser(
+    oid: string,
+    uid: string,
+    role: Role
+  ): Observable<EnrollToOrgResponse[]> {
     return this.httpService.put<EnrollToOrgResponse[]>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
       {
@@ -109,7 +113,11 @@ export class AuthService {
     );
   }
 
-  unrollUser(oid: string, uid: string, role: Role): Observable<EnrollToOrgResponse[]> {
+  unrollUser(
+    oid: string,
+    uid: string,
+    role: Role
+  ): Observable<EnrollToOrgResponse[]> {
     return this.httpService.patch<EnrollToOrgResponse[]>(
       `${this.baseUrl}/auth/orgs/${_.parseInt(oid)}/enroll`,
       {
