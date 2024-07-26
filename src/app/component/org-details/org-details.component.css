@@ -23,6 +23,12 @@
   align-items: center;
   justify-content: center;
   color: gray;
+	text-decoration: none;
+	opacity: 0.8;
+}
+
+.actions-container:hover {
+	opacity: 1;
 }
 
 form {

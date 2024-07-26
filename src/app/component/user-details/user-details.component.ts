@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import _ from "lodash";
@@ -19,146 +19,166 @@ import { User, UserId } from "../../../@types/auth";
 import { AuthService } from "../../auth.service";
 
 @Component({
-  selector: "naval-user-details",
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatDividerModule,
-    MatTabsModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatAutocompleteModule
-  ],
-  templateUrl: "./user-details.component.html",
-  styleUrl: "./user-details.component.css"
+	selector: "naval-user-details",
+	standalone: true,
+	imports: [
+		ReactiveFormsModule,
+		MatCardModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatButtonModule,
+		MatSelectModule,
+		MatRadioModule,
+		MatDividerModule,
+		MatTabsModule,
+		MatProgressSpinnerModule,
+		MatIconModule,
+		MatAutocompleteModule
+	],
+	templateUrl: "./user-details.component.html",
+	styleUrl: "./user-details.component.css"
 })
 export class UserDetailsComponent {
-  protected users!: User[];
-  protected user!: User;
-  protected id!: string;
-  protected groups!: User[];
-  protected filteredUsers!: User[];
-  protected filteredGroups!: User[];
-  protected noGroups = true;
+	protected user!: User;
+	protected users!: User[];
+	protected groups!: User[];
+	protected userGroups!: User[];
+	protected usersToUngroup!: User[];
+	protected filteredUsersToGroup!: User[];
+	protected filteredUsersToUngroup!: User[];
+	protected noGroups = true;
+	protected isLoading = false;
+	protected selectedTab = 0;
 
-  @ViewChild("userInput") userInput!: ElementRef<HTMLInputElement>;
-  @ViewChild("groupInput") groupInput!: ElementRef<HTMLInputElement>;
+	@ViewChild("userInput") userInput!: ElementRef<HTMLInputElement>;
+	@ViewChild("groupInput") groupInput!: ElementRef<HTMLInputElement>;
 
-  protected groupUserForm = new FormGroup({
-    gid: new FormControl(""),
-    uid: new FormControl("")
-  });
+	protected groupUserForm = new FormGroup({
+		gid: new FormControl(""),
+		uid: new FormControl("")
+	});
 
-  protected ungroupUserForm = new FormGroup({
-    gid: new FormControl(""),
-    uid: new FormControl("")
-  });
+	protected ungroupUserForm = new FormGroup({
+		gid: new FormControl(""),
+		uid: new FormControl("")
+	});
 
-  protected userUpdateForm = new FormGroup({
-    name: new FormControl(""),
-    username: new FormControl(""),
-    email: new FormControl(""),
-    active: new FormControl(),
-    verified: new FormControl()
-  });
+	protected userUpdateForm = new FormGroup({
+		name: new FormControl(""),
+		username: new FormControl(""),
+		email: new FormControl(""),
+		active: new FormControl(),
+		verified: new FormControl()
+	});
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router
+	) { }
 
-  @Input()
-  set user_id(user_id: string) {
-    this.id = user_id;
-    this.authService.getUsers().subscribe((users) => {
-      this.users = users;
-      const user = this.users.find((user) => {
-        return user.uid === _.parseInt(this.id);
-      });
-      if (!user) {
-        return;
-      } else {
-        this.user = user;
-        if (_.isArray(this.user.groups)) {
-          this.noGroups = false;
-          this.groups = this.users.filter((users) => {
-            return this.user.groups.includes(users.uid);
-          });
-        }
-      }
-    });
-  }
+	@Input()
+	set user_id(user_id: string) {
+		this.isLoading = true;
+		this.authService.getUsers().subscribe((users) => {
+			const user = users.find((user) => user.uid === _.parseInt(user_id));
+			this.users = users.filter((user) => user.uid !== _.parseInt(user_id));
+			if (!user) {
+				this.isLoading = false;
+				return;
+			} else {
+				this.user = user;
+				if (_.isArray(this.user.groups)) {
+					this.noGroups = false;
+					this.groups = this.users.filter((user) =>
+						this.user.groups.includes(user.uid)
+					);
+					this.userGroups = this.users.filter(
+						(user) => !this.user.groups.includes(user.uid)
+					);
+					this.usersToUngroup = this.users.filter((user) =>
+						this.user.groups.includes(user.uid)
+					);
+					console.log("user: ", this.user);
+					console.log("users to group: ", this.userGroups);
+					console.log("users to ungroup :", this.usersToUngroup);
+				}
+			}
+			this.isLoading = false;
+		});
+	}
 
-  filterUsers() {
-    const filterValue = this.userInput.nativeElement.value.toLowerCase();
-    this.filteredUsers = this.users.filter((user) =>
-      user.name.toLowerCase().includes(filterValue)
-    );
-  }
+	filterUsersToGroup() {
+		const filterValue = this.userInput.nativeElement.value.toLowerCase();
+		this.filteredUsersToGroup = this.userGroups.filter((user) =>
+			user.name.toLowerCase().includes(filterValue)
+		);
+	}
 
-  filterGroups() {
-    console.log(this.filteredGroups);
-    const filterValue = this.groupInput.nativeElement.value.toLowerCase();
-    this.filteredGroups = this.groups.filter((group) =>
-      group.name.toLowerCase().includes(filterValue)
-    );
-  }
+	filterUsersToUngroup() {
+		const filterValue = this.groupInput.nativeElement.value.toLowerCase();
+		this.filteredUsersToUngroup = this.usersToUngroup.filter((user) =>
+			user.name.toLowerCase().includes(filterValue)
+		);
+	}
 
-  handleDeleteUser(): void {
-    const uid: UserId = {
-      uid: _.parseInt(this.id)
-    };
-    this.authService.deleteUser(uid).subscribe(() => {
-      this.router.navigate(["/users"]);
-    });
-  }
+	handleDeleteUser(): void {
+		const uid: UserId = {
+			uid: this.user.uid
+		};
+		this.authService.deleteUser(uid).subscribe(() => {
+			this.router.navigate(["/users"]);
+		});
+	}
 
-  handleUpdateUser(): void {
-    const formValue = this.userUpdateForm.value;
-    const user = {
-      ...this.user,
-      ..._.omitBy(
-        _.omitBy(formValue, (v) => _.isNull(v)),
-        (v) => _.isEmpty(v)
-      )
-    };
-    this.authService.updateUser(user).subscribe((user) => {
-      this.user = user;
-    });
-    this.userUpdateForm.reset();
-  }
+	handleUpdateUser(): void {
+		const formValue = this.userUpdateForm.value;
+		const user = {
+			...this.user,
+			..._.omitBy(
+				_.omitBy(formValue, (v) => _.isNull(v)),
+				(v) => _.isEmpty(v)
+			)
+		};
+		this.authService.updateUser(user).subscribe((user) => {
+			this.user = user;
+		});
+		this.userUpdateForm.reset();
+		this.selectedTab = 0;
+	}
 
-  handleGroupUser() {
-    this.groupUserForm.get("uid")?.setValue(this.id);
-    const { uid, gid } = this.groupUserForm.value;
-    if (uid && gid) {
-      this.authService.groupUser(uid, gid).subscribe((res) => {
-        const newGroup = this.users.find((user) => {
-          return user.uid === res.gid;
-        });
-        this.groups = [...this.groups, newGroup!];
-        this.groupUserForm.get("gid")?.reset();
-      });
-    }
-  }
+	handleGroupUser() {
+		this.groupUserForm.get("uid")?.setValue(_.toString(this.user.uid));
+		const { uid, gid } = this.groupUserForm.value;
+		if (uid && gid) {
+			this.authService.groupUser(uid, gid).subscribe((res) => {
+				const [responseObject] = res;
+				// FIX: fix this
+				// Add the user to the group. Add group(gid) to the userGroups
+				const newGroup = this.users.find((user) => user.uid === responseObject.gid);
+				this.usersToUngroup = [...this.usersToUngroup, newGroup!];
+				// FIX: fix this
+				this.userGroups = this.users.filter((user) => user.uid !== responseObject.gid);
+				this.groupUserForm.get("gid")?.reset();
+				this.selectedTab = 0;
+				console.log("ok: ", res);
+			});
+		}
+	}
 
-  handleUngroupUser() {
-    this.ungroupUserForm.get("uid")?.setValue(this.id);
-    const { uid, gid } = this.ungroupUserForm.value;
-    if (uid && gid) {
-      this.authService.ungroupUser(uid, gid).subscribe((res) => {
-        const filteredGroup = this.users.filter((user) => {
-          return user.uid !== res.gid;
-        });
-        this.groups = filteredGroup;
-        this.groupUserForm.get("gid")?.reset();
-      });
-    }
-  }
+	handleUngroupUser() {
+		this.ungroupUserForm.get("uid")?.setValue(_.toString(this.user.uid));
+		const { uid, gid } = this.ungroupUserForm.value;
+		if (uid && gid) {
+			this.authService.ungroupUser(uid, gid).subscribe((res) => {
+				const [responseObject] = res;
+				// FIX: fix this
+				this.userGroups = this.users.filter((user) => user.uid !== responseObject.gid);
+				const newGroup = this.users.find((user) => user.uid === responseObject.gid);
+				this.usersToUngroup = [...this.userGroups, newGroup!];
+				this.groupUserForm.get("gid")?.reset();
+				this.selectedTab = 0;
+				console.log("ok: ", res);
+			});
+		}
+	}
 }

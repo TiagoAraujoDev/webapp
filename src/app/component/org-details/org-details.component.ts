@@ -210,7 +210,13 @@ export class OrgDetailsComponent {
       oid: this.org.oid
     };
     this.authService.deleteOrg(oid).subscribe(() => {
-      this.router.navigate(["/orgs"]);
+      this.router.navigate(["/orgs"]).then(r => {
+        if (r) {
+          alert("Navigation completed successfully");
+        } else {
+          alert("Navigation failed");
+        }
+      });
     });
   }
 

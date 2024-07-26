@@ -1,133 +1,150 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
-  <mat-tab label="User details">
-    @if (user) {
-      <div class="tab-wrapper">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title class="title-container">
-              <span>{{ user.name }}</span>
-              @if (user.verified) {
-                <mat-icon fontIcon="verified" />
-              }
-            </mat-card-title>
-            <mat-card-subtitle>
-              {{ user.email }}
-            </mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores
-            cum debitis vitae distinctio molestias sapiente natus soluta placeat
-            quasi error repellat et cumque minus impedit, voluptates reiciendis
-            iste laudantium. Illo!
-          </mat-card-content>
-          <mat-card-footer>
-            <mat-card-actions>
-              <a routerLink="/users" class="actions-container">
-                <mat-icon>arrow_back</mat-icon>
-                <span>Go back</span>
-              </a>
-            </mat-card-actions>
-          </mat-card-footer>
-        </mat-card>
-      </div>
-    }
-    @if (!user) {
+@if (!isLoading) {
+  <mat-tab-group
+    [(selectedIndex)]="selectedTab"
+    mat-stretch-tabs="false"
+    mat-align-tabs="center"
+  >
+    <mat-tab label="User details">
+      @if (user) {
+        <div class="tab-wrapper">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title class="title-container">
+                <span>{{ user.name }}</span>
+                @if (user.verified) {
+                  <mat-icon fontIcon="verified" />
+                }
+              </mat-card-title>
+              <mat-card-subtitle>
+                {{ user.email }}
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores
+              cum debitis vitae distinctio molestias sapiente natus soluta
+              placeat quasi error repellat et cumque minus impedit, voluptates
+              reiciendis iste laudantium. Illo!
+            </mat-card-content>
+            <mat-card-footer>
+              <mat-card-actions>
+                <a routerLink="/users" class="actions-container">
+                  <mat-icon>arrow_back</mat-icon>
+                  <span>Go back</span>
+                </a>
+              </mat-card-actions>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+      }
+      @if (!user) {
+        <div class="tab-wrapper">
+          <mat-spinner></mat-spinner>
+        </div>
+      }
+    </mat-tab>
+    <mat-tab label="Update user">
+      <h2>Update user information</h2>
+      <p>Fill in the necessary information.</p>
+      <form [formGroup]="userUpdateForm">
+        <mat-form-field class="input-container">
+          <mat-label>Name</mat-label>
+          <input formControlName="name" matInput />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>Username</mat-label>
+          <input formControlName="username" matInput />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>Email</mat-label>
+          <input
+            formControlName="email"
+            placeholder="example@gmail.com"
+            matInput
+          />
+        </mat-form-field>
+        <div class="button-container">
+          <button (click)="handleUpdateUser()" mat-flat-button>Update</button>
+          <button (click)="handleDeleteUser()" mat-flat-button color="warn">
+            Delete
+          </button>
+        </div>
+      </form>
+    </mat-tab>
+    <mat-tab label="Enroll user">
+      <h2>Enroll</h2>
+      <p>Enroll an user to an group.</p>
+      <form [formGroup]="groupUserForm">
+        <mat-form-field class="input-container">
+          <mat-label>User ID</mat-label>
+          <input matInput [value]="user.uid" disabled />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>Group ID</mat-label>
+          <input
+            #userInput
+            type="text"
+            required
+            placeholder="Select an group..."
+            aria-label="group"
+            matInput
+            (input)="filterUsersToGroup()"
+            (focus)="filterUsersToGroup()"
+            formControlName="gid"
+            [matAutocomplete]="usersAutocomplete"
+          />
+          <mat-autocomplete #usersAutocomplete="matAutocomplete">
+            @for (group of filteredUsersToGroup; track group.uid) {
+              <mat-option [value]="group.uid">{{ group.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <button (click)="handleGroupUser()" mat-flat-button>Enroll user</button>
+      </form>
+    </mat-tab>
+
+    <mat-tab label="Ungroup user" [disabled]="noGroups">
+      <h2>Ungroup</h2>
+      <p>Ungroup an user from a group.</p>
+      <form [formGroup]="ungroupUserForm">
+        <mat-form-field class="input-container">
+          <mat-label>User ID</mat-label>
+          <input matInput [value]="user.uid" disabled />
+        </mat-form-field>
+        <mat-form-field class="input-container">
+          <mat-label>Group ID</mat-label>
+          <input
+            #groupInput
+            type="text"
+            required
+            placeholder="Select an group..."
+            aria-label="group 2"
+            matInput
+            (input)="filterUsersToUngroup()"
+            (focus)="filterUsersToUngroup()"
+            formControlName="gid"
+            [matAutocomplete]="groupAutocomplete"
+          />
+          <mat-autocomplete #groupAutocomplete="matAutocomplete">
+            @for (group of filteredUsersToUngroup; track group.uid) {
+              <mat-option [value]="group.uid">{{ group.name }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <button (click)="handleUngroupUser()" mat-flat-button>
+          Ungroup user
+        </button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+} @else {
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+    <mat-tab label="User details">
       <div class="tab-wrapper">
         <mat-spinner></mat-spinner>
       </div>
-    }
-  </mat-tab>
-  <mat-tab label="Update user">
-    <h2>Update user information</h2>
-    <p>Fill in the necessary information.</p>
-    <form [formGroup]="userUpdateForm">
-      <mat-form-field class="input-container">
-        <mat-label>Name</mat-label>
-        <input formControlName="name" matInput />
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>Username</mat-label>
-        <input formControlName="username" matInput />
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>Email</mat-label>
-        <input
-          formControlName="email"
-          placeholder="example@gmail.com"
-          matInput
-        />
-      </mat-form-field>
-      <div class="button-container">
-        <button (click)="handleUpdateUser()" mat-flat-button>Update</button>
-        <button (click)="handleDeleteUser()" mat-flat-button color="warn">
-          Delete
-        </button>
-      </div>
-    </form>
-  </mat-tab>
-  <mat-tab label="Enroll user">
-    <h2>Enroll</h2>
-    <p>Enroll an user to an group.</p>
-    <form [formGroup]="groupUserForm">
-      <mat-form-field class="input-container">
-        <mat-label>User ID</mat-label>
-        <input matInput [value]="id" disabled />
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>Group ID</mat-label>
-        <input
-          #userInput
-          type="text"
-          required
-          placeholder="Select an group..."
-          aria-label="group"
-          matInput
-          (input)="filterUsers()"
-          (focus)="filterUsers()"
-          formControlName="gid"
-          [matAutocomplete]="usersAutocomplete"
-        />
-        <mat-autocomplete #usersAutocomplete="matAutocomplete">
-          @for (user of filteredUsers; track user.uid) {
-            <mat-option [value]="user.uid">{{ user.name }}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-      <button (click)="handleGroupUser()" mat-flat-button>Enroll user</button>
-    </form>
-  </mat-tab>
-
-  <mat-tab label="Ungroup user" [disabled]="noGroups">
-    <h2>Ungroup</h2>
-    <p>Ungroup an user from a group.</p>
-    <form [formGroup]="ungroupUserForm">
-      <mat-form-field class="input-container">
-        <mat-label>User ID</mat-label>
-        <input matInput [value]="id" disabled />
-      </mat-form-field>
-      <mat-form-field class="input-container">
-        <mat-label>Group ID</mat-label>
-        <input
-          #groupInput
-          type="text"
-          required
-          placeholder="Select an group..."
-          aria-label="group 2"
-          matInput
-          (input)="filterGroups()"
-          (focus)="filterGroups()"
-          formControlName="gid"
-          [matAutocomplete]="groupAutocomplete"
-        />
-        <mat-autocomplete #groupAutocomplete="matAutocomplete">
-          @for (group of filteredGroups; track group.uid) {
-            <mat-option [value]="group.uid">{{ group.name }}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-      <button (click)="handleUngroupUser()" mat-flat-button>
-        Ungroup user
-      </button>
-    </form>
-  </mat-tab>
-</mat-tab-group>
+    </mat-tab>
+    <mat-tab label="Update user" disabled> </mat-tab>
+    <mat-tab label="Enroll user" disabled> </mat-tab>
+    <mat-tab label="Ungroup user" disabled> </mat-tab>
+  </mat-tab-group>
+}

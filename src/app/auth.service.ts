@@ -51,10 +51,10 @@ export class AuthService {
     );
   }
 
-  groupUser(uid: string, gid: string): Observable<GroupUserResponse> {
+  groupUser(uid: string, gid: string): Observable<GroupUserResponse[]> {
     const _uid = _.parseInt(uid);
     const _gid = _.parseInt(gid);
-    return this.httpService.put<GroupUserResponse>(
+    return this.httpService.put<GroupUserResponse[]>(
       `${this.baseUrl}/auth/users/${_uid}/group`,
       {
         gid: _gid
@@ -62,10 +62,10 @@ export class AuthService {
     );
   }
 
-  ungroupUser(uid: string, gid: string): Observable<GroupUserResponse> {
+  ungroupUser(uid: string, gid: string): Observable<GroupUserResponse[]> {
     const _uid = _.parseInt(uid);
     const _gid = _.parseInt(gid);
-    return this.httpService.patch<GroupUserResponse>(
+    return this.httpService.patch<GroupUserResponse[]>(
       `${this.baseUrl}/auth/users/${_uid}/group`,
       {
         gid: _gid
